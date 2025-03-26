@@ -8,10 +8,20 @@
  
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
       <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Opulenza.Application\Opulenza.Application.csproj" />
+      <ProjectReference Include="..\Opulenza.Contracts\Opulenza.Contracts.csproj" />
+      <ProjectReference Include="..\Opulenza.Infrastructure\Opulenza.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
