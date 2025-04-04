@@ -1,9 +1,9 @@
 ﻿using Opulenza.Domain.Common;
-using Opulenza.Domain.Enums;
+using Opulenza.Domain.Entities.Enums;
 
 namespace Opulenza.Domain.Entities.Orders;
 
-public class Order: BaseEntity
+public class Order: BaseEntity, IOptionalUserOwned
 { 
     public int? UserId { get; set; }
     

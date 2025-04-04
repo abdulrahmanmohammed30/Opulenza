@@ -1,8 +1,7 @@
 ﻿using Opulenza.Domain.Common;
-using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Products;
 
-namespace Opulenza.Domain.Categories;
+namespace Opulenza.Domain.Entities.Categories;
 
 
 public class Category: BaseEntity

@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Domain.Enums;
+﻿namespace Opulenza.Domain.Entities.Enums;
 
 public enum OrderStatus
 {

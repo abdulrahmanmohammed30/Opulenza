@@ -2,9 +2,10 @@
 
 namespace Opulenza.Domain.Entities.Users;
 
-public class UserAddress: Entity
+public class UserAddress: BaseEntity, IUserOwned
 {
     public int UserId { get; set; }
+    
     public required string StreetAddress { get; set; }
     
     public required string Country { get; set; }

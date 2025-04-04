@@ -2,7 +2,7 @@
 
 namespace Opulenza.Domain.Entities.Carts;
 
-public class Cart: BaseEntity
+public class Cart: BaseEntity, IUserOwned
 {
     public int UserId { get; set; }
     

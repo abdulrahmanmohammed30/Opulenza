@@ -5,7 +5,7 @@ using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Domain.Entities.Shipments;
 
-public class Shipment: Entity
+public class Shipment: BaseEntity
 {
     public int OrderId { get; set; }
     
@@ -18,7 +18,7 @@ public class Shipment: Entity
     public UserAddress? UserAddress { get; set; }
     
     public required string ShippingCompany { get; set; }
-    public required string ShippingTracKId { get; set; }
+    public required string ShippingTrackId { get; set; }
     public required string ShippingTracKUrl { get; set; }
 
 }

@@ -1,5 +1,5 @@
-﻿using Opulenza.Domain.Categories;
-using Opulenza.Domain.Common;
+﻿using Opulenza.Domain.Common;
+using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Ratings;
 
 namespace Opulenza.Domain.Entities.Products;
@@ -27,8 +27,8 @@ public class Product: BaseEntity
     public bool IsAvailable { get; init; }
 
     public List<ProductImage>? Images { get; set; }
-    
-    public List<Rating>? Ratings { get; set; }
+
+    public List<Rating> Ratings { get; set; } = new List<Rating>();
 
     public List<Category>? Categories { get; set; }
     

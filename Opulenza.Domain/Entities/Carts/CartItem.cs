@@ -2,7 +2,7 @@
 
 namespace Opulenza.Domain.Entities.Carts;
 
-public class CartItem:Entity
+public class CartItem:BaseEntity
 {
     public int CartId { get; set; }
     

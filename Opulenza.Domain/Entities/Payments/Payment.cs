@@ -1,12 +1,10 @@
-﻿using Opulenza.Domain.Entities.Enums;
-using Opulenza.Domain.Enums;
+﻿using Opulenza.Domain.Common;
+using Opulenza.Domain.Entities.Enums;
 
-namespace Opulenza.Domain.Payments;
+namespace Opulenza.Domain.Entities.Payments;
 
-public class Payment
+public class Payment:BaseEntity
 {
-    public int Id { get; set; }
-    
     public PaymentStatus PaymentStatus { get; set; }
 
     public PaymentMethod PaymentMethod { get; set; }

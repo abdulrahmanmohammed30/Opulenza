@@ -15,5 +15,15 @@ public class ApplicationUser: IdentityUser<int>
         
         public Cart? Cart { get; set; }
         
-        public Wishlist? Wishlist { get; set; }
+        public List<WishListItem>? WishListItems{ get; set; }
+        
+        public string? RefreshToken { get; set; }
+        
+        public DateTime RefreshTokenExpiry { get; set; }
+        
+        public bool IsDeleted { get; set; } 
+        
+        public DateTime CreatedAt { get; set; }
+        
+        public DateTime UpdatedAt { get; set; }
 }

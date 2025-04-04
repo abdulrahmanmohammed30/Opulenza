@@ -2,7 +2,7 @@
 
 namespace Opulenza.Domain.Entities.Orders;
 
-public class OrderItem: Entity
+public class OrderItem: BaseEntity
 {
     public int OrderId { get; set; }
     
