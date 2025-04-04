@@ -18,6 +18,14 @@ var app = builder.Build();
 
 // #endregion
 
+app.UseSwagger();
+
+app.UseSwaggerUI(setupAction =>
+{
+    setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", name: "Opulenza API");
+    setupAction.RoutePrefix = string.Empty;
+});
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();

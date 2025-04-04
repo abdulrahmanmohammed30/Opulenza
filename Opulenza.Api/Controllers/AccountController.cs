@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,7 @@ using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Api.Controllers;
 
+[ApiVersion("1.0")]
 public class AccountController(
     ISender mediator,
     SignInManager<ApplicationUser> signInManager) : CustomController
@@ -145,9 +147,10 @@ public class AccountController(
                                 $"&expiration={WebUtility.UrlEncode(result.Value.Expiration.ToString("o"))}";
         return new RedirectResult(clientRedirectUrl);
     }
-
+ 
     
     [Authorize]
+    [HttpDelete]
     [Route(ApiEndpoints.Authentication.DeleteAccount)]
     public async Task<IActionResult> DeleteUser()
     {

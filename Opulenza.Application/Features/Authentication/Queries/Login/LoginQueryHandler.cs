@@ -25,7 +25,7 @@ public class LoginQueryHandler(UserManager<ApplicationUser> userManager, IAuthen
 
         var tokenResult= await authenticationService.GenerateJwt(user);
         return new LoginResult()
-        {
+        {   
             Token = tokenResult.Token,
             RefreshToken = tokenResult.RefreshToken,
             Expiration = tokenResult.Expiration

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
@@ -10,6 +11,7 @@ using Opulenza.Contracts.Users;
 
 namespace Opulenza.Api.Controllers;
 
+[ApiVersion("1.0")]
 public class UserController(ISender mediator):CustomController
 {
     [Authorize]
@@ -63,6 +65,7 @@ public class UserController(ISender mediator):CustomController
     [HttpGet(ApiEndpoints.Users.GetUser)]
     public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
     {
+        var headers = HttpContext.Request.Headers;
         var result = await mediator.Send(new GetUserQuery(), cancellationToken);
         return result.Match(value=>Ok(value.MapToGetUserQuery()), Problem);
     }
