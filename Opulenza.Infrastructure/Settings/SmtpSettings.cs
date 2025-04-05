@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Application.Settings;
+﻿namespace Opulenza.Infrastructure.Settings;
 
 public class SmtpSettings
 {
@@ -10,5 +10,4 @@ public class SmtpSettings
     public string Password { get; set; } = string.Empty;
     public bool UseSsl { get; set; }
     public bool UserStartTls { get; set; }
-    
 }

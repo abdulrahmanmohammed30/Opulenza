@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Users;
@@ -13,7 +14,8 @@ public class UploadUserImageCommandHandler(
     IUploadFileService uploadFileService,
     UserManager<ApplicationUser> userManager,
     IRepository<UserImage> repository,
-    IUnitOfWork unitOfWork) : IRequestHandler<UploadUserImageCommand, ErrorOr<UploadUserImageResult>>
+    IUnitOfWork unitOfWork,
+    ILogger<UploadUserImageCommandHandler> logger) : IRequestHandler<UploadUserImageCommand, ErrorOr<UploadUserImageResult>>
 {
     public async Task<ErrorOr<UploadUserImageResult>> Handle(UploadUserImageCommand request,
         CancellationToken cancellationToken)
@@ -25,6 +27,7 @@ public class UploadUserImageCommandHandler(
 
         if (user == null)
         {
+            logger.LogWarning("User with username {Username} not found", username);
             return Error.Unauthorized();
         }
 

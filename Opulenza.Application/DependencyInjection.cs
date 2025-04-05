@@ -75,6 +75,7 @@ public static class DependencyInjection
                 // This tells the GitHub provider to use the external sign-in cookie, which works well with Identity.
                 options.SignInScheme = IdentityConstants.ExternalScheme;
             });
+        
         services.AddAuthorization(options =>
         {
             // all action methods are authorized by default 
@@ -88,14 +89,9 @@ public static class DependencyInjection
         services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
-        services.Configure<FileSettings>(configuration.GetSection("FileSettings"));
-        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
-
-        services.AddScoped<IUploadFileService, UploadFileService>();
-        services.AddScoped<IEmailService, EmailService>();
 
         services.AddHttpContextAccessor();
-
+        
         return services;
     }
 }

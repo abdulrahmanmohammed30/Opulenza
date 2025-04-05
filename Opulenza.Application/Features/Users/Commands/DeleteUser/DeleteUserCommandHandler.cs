@@ -1,6 +1,7 @@
 ﻿using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Domain.Entities.Carts;
 using Opulenza.Domain.Entities.Ratings;
@@ -17,20 +18,21 @@ public class DeleteUserCommandHandler(
     ISoftDeleteRepository<UserAddress> userAddressSoftDeleteRepository,
     ISoftDeleteRepository<UserImage> userImageSoftDeleteRepository,
     ISoftDeleteRepository<WishListItem> wishListItemSoftDeleteRepository,
-    IUnitOfWork unitOfWork) : IRequestHandler<DeleteUserCommand, ErrorOr<string>>
+    IUnitOfWork unitOfWork, ILogger<DeleteUserCommandHandler> logger) : IRequestHandler<DeleteUserCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        var username = currentUserProvider.GetCurrentUser().Username;
+        var user = await userManager.FindByNameAsync(username);
+
+        if (user == null)
+        {
+            logger.LogWarning("User with username {Username} not found", username);
+            return Error.Unauthorized();
+        }
+
         try
         {
-            var username = currentUserProvider.GetCurrentUser().Username;
-            var user = await userManager.FindByNameAsync(username);
-
-            if (user == null)
-            {
-                return Error.Unauthorized();
-            }
-
             user.IsDeleted = true;
 
             await unitOfWork.ExecuteInTransactionAsync(async () =>
@@ -50,8 +52,9 @@ public class DeleteUserCommandHandler(
             }, cancellationToken);
             return "Account deleted successfully";
         }
-        catch
+        catch(Exception ex)
         {
+            logger.LogError(ex, "Failed to delete user {Username}", username);
             return "Failed to delete user";
         }
     }

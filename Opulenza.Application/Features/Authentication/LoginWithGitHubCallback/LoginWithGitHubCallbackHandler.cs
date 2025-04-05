@@ -2,12 +2,14 @@
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Common.Utilities;
 using Opulenza.Application.Models;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Carts;
 using Opulenza.Domain.Entities.Users;
+using Serilog.Context;
 
 namespace Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 
@@ -19,7 +21,8 @@ public class LoginWithGitHubCallbackHandler(
     IUrlGenerator urlGenerator, 
     IRepository<UserImage> userImageRepository,
     ICartRepository cartRepository, 
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork, 
+    ILogger<LoginWithGitHubCallbackHandler> logger)
     : IRequestHandler<LoginWithGitHubCallbackCommand, ErrorOr<ExternalLoginResult>>
 {
     public async Task<ErrorOr<ExternalLoginResult>> Handle(LoginWithGitHubCallbackCommand request,
@@ -27,6 +30,7 @@ public class LoginWithGitHubCallbackHandler(
     {
         if (request.RemoteError != null)
         {
+            logger.LogWarning("External provider returned an error: {Error}", request.RemoteError);
             return Error.Validation("ExternalProviderRemoteError",
                 description: "Error from external provider: " + request.RemoteError);
         }
@@ -34,6 +38,7 @@ public class LoginWithGitHubCallbackHandler(
         var info = await signInManager.GetExternalLoginInfoAsync();
         if (info == null)
         {
+            logger.LogWarning("External login information could not be loaded.");
             return Error.Validation("ExternalLoginInfoLoadError",
                 description: "Error loading external login information.");
         }
@@ -54,18 +59,28 @@ public class LoginWithGitHubCallbackHandler(
 
             if (email == null)
             {
+                logger.LogWarning("Email was not received from external provider.");
                 return Error.Validation("EmailNotReceivedFromExternalProvider",
                     description: "Email was not received from external provider.");
             }
             
             if (username == null)
             {
+                using (LogContext.PushProperty("Username", username))
+                {
+                    logger.LogWarning("Username was not received from external provider.");
+                }
+                
                 return Error.Validation("UsernameNotReceivedFromExternalProvider",
                     description: "username was not received from external provider.");
             }
             
             if (name == null)
             {
+                using (LogContext.Push())
+                {
+                    logger.LogWarning("Name was not received from external provider.");
+                }
                 return Error.Validation("NameNotReceivedFromExternalProvider",
                     description: "Name was not received from external provider.");
             }
@@ -102,7 +117,12 @@ public class LoginWithGitHubCallbackHandler(
                 };
                 
                 await emailService.SendEmailAsync(emailInstance);
-                
+
+                using (LogContext.PushProperty("UserId", user.Id))
+                using (LogContext.PushProperty("username", user.UserName))
+                {
+                    logger.LogWarning("User email is not confirmed. Email confirmation link sent to {Email}", user.Email);
+                }
                 return Error.Validation("EmailNotConfirmed",
                     "User email must be confirmed before logging in using an external provider login scheme");
             }
@@ -118,6 +138,10 @@ public class LoginWithGitHubCallbackHandler(
                 var createUserResult = await userManager.CreateAsync(user);
                 if (createUserResult.Succeeded == false)
                 {
+                    using (LogContext.PushProperty("UserInfo", user))
+                    {
+                        logger.LogWarning("User creation failed: {Errors}", createUserResult.Errors);
+                    }
                     return createUserResult.Errors
                         .Select(error => Error.Validation(code: error.Code, description: error.Description))
                         .ToList();
@@ -127,6 +151,7 @@ public class LoginWithGitHubCallbackHandler(
         
                 if (addToRoleResult.Succeeded == false)
                 {
+                    logger.LogWarning("User was not added to role {Role}, Errors: {Errors}", user.UserName, addToRoleResult.Errors);
                     // return roleIdentityResult.Errors.Select(error =>
                     //     Error.Failure(code: error.Code, description: error.Description)).ToList();
                     //return Error.Failure();

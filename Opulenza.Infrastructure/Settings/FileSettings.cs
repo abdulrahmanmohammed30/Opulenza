@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Application.Settings;
+﻿namespace Opulenza.Infrastructure.Settings;
 
 public class FileSettings
 {

@@ -2,12 +2,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Domain.Entities.Users;
+using Serilog.Context;
 
 namespace Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
 
-public class UpdateUserAddressCommandHandler(ICurrentUserProvider currentUserProvider, UserManager<ApplicationUser> userManager): IRequestHandler<UpdateUserAddressCommand, ErrorOr<string>>
+public class UpdateUserAddressCommandHandler(ICurrentUserProvider currentUserProvider, 
+    UserManager<ApplicationUser> userManager, ILogger<UpdateUserAddressCommandHandler> logger): IRequestHandler<UpdateUserAddressCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(UpdateUserAddressCommand request, CancellationToken cancellationToken)
     {
@@ -15,6 +18,7 @@ public class UpdateUserAddressCommandHandler(ICurrentUserProvider currentUserPro
         
         if (string.IsNullOrEmpty(username))
         {
+            logger.LogWarning("Username is null or empty");
             return Error.Unauthorized();
         }
         
@@ -22,6 +26,7 @@ public class UpdateUserAddressCommandHandler(ICurrentUserProvider currentUserPro
 
         if (user == null)
         {
+            logger.LogWarning("User with username {Username} not found", username);
             return Error.Unauthorized();
         }
         
@@ -36,6 +41,6 @@ public class UpdateUserAddressCommandHandler(ICurrentUserProvider currentUserPro
 
         await userManager.UpdateAsync(user);
         
-        return "";
+        return "Address updated successfully";
     }
 }

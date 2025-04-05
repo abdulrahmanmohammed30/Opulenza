@@ -6,8 +6,9 @@ using MimeKit;
 using Opulenza.Application.Models;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Application.Settings;
+using Opulenza.Infrastructure.Settings;
 
-namespace Opulenza.Application.Services;
+namespace Opulenza.Infrastructure.Services;
 
 public class EmailService(IOptions<SmtpSettings> smtpSettingsOptions, IValidator<Email> validator)
     : IEmailService

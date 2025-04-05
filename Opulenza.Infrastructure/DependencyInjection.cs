@@ -10,6 +10,7 @@ using Opulenza.Domain.Entities.Users;
 using Opulenza.Infrastructure.Carts.Persistence;
 using Opulenza.Infrastructure.Common.Persistence;
 using Opulenza.Infrastructure.Interceptors;
+using Opulenza.Infrastructure.Settings;
 using Opulenza.Infrastructure.Users.Persistence;
 using Opulenza.Infrastructure.Wishlists.Persistence;
 
@@ -81,6 +82,10 @@ public static class DependencyInjection
             .AddRoleStore<RoleStore<ApplicationRole, AppDbContext, int>>();
 
         services.AddScoped<IUserImageRepository, UserImageRepository>();
+        
+        services.Configure<FileSettings>(configuration.GetSection("FileSettings"));
+        services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
+
         return services;
     }
 }

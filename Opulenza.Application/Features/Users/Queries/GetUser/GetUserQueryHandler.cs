@@ -2,13 +2,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Mapping;
 using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Application.Features.Users.Queries.GetUser;
 
-public class GetUserQueryHandler(ICurrentUserProvider currentUserProvider, UserManager<ApplicationUser> userManager)
+public class GetUserQueryHandler(ICurrentUserProvider currentUserProvider, UserManager<ApplicationUser> userManager,
+    ILogger<GetUserQueryHandler> logger)
     : IRequestHandler<GetUserQuery, ErrorOr<GetUserQueryResult>>
 {
     public async Task<ErrorOr<GetUserQueryResult>> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -21,6 +23,7 @@ public class GetUserQueryHandler(ICurrentUserProvider currentUserProvider, UserM
 
         if (user == null)
         {
+            logger.LogWarning("User with username {Username} not found", username);
             return Error.Unauthorized();
         }
 

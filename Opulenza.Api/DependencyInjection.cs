@@ -5,7 +5,12 @@ using Opulenza.Api.Services;
 using Opulenza.Application;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Common.Utilities;
+using Opulenza.Application.ServiceContracts;
+using Opulenza.Application.Services;
 using Opulenza.Infrastructure;
+using Opulenza.Infrastructure.Services;
+using Serilog;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Opulenza.Api;
 
@@ -49,7 +54,17 @@ public static class DependencyInjection
             
         });
         
+        services.AddScoped<IUploadFileService, UploadFileService>();
+        services.AddScoped<IEmailService, EmailService>();
         
+        Serilog.ILogger logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .ReadFrom.Configuration(configuration)
+            .ReadFrom.Services(services.BuildServiceProvider())
+            .CreateLogger();
+        Log.Logger = logger;
+
+        services.AddSingleton(logger);
         return services;
     }
 }

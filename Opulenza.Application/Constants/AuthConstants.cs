@@ -2,6 +2,6 @@
 
 public static class AuthConstants
 {
-    public static string AdminUserPolicyName = "Admin";
-    public static string AdminUserClaimName = "admin";
+    public const string AdminUserPolicyName = "Admin";
+    public const string AdminUserClaimName = "admin";
 }

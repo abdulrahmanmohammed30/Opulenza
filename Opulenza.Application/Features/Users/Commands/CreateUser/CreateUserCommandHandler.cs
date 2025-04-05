@@ -3,6 +3,7 @@ using ErrorOr;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Common.Utilities;
 using Opulenza.Application.Mapping;
@@ -10,6 +11,7 @@ using Opulenza.Application.Models;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Carts;
 using Opulenza.Domain.Entities.Users;
+using Serilog.Context;
 
 namespace Opulenza.Application.Features.Users.Commands.CreateUser;
 
@@ -19,15 +21,30 @@ public class CreateUserCommandHandler(
     ICartRepository cartRepository,
     IUnitOfWork unitOfWork,
     IEmailService emailService,
-    IUrlGenerator urlGenerator) :
+    IUrlGenerator urlGenerator,
+    ILogger<CreateUserCommandHandler> logger) :
     IRequestHandler<CreateUserCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
+        
+        var userInfo = new Dictionary<string, string>()
+        {
+            { "FirstName", request.FirstName },
+            { "LastName", request.LastName },
+            { "UserName", request.Username },
+            { "Email", request.Email },
+            { "Password", request.Password },
+        };
 
         if (validationResult.IsValid == false)
         {
+            using (LogContext.PushProperty("UserInfo", userInfo))
+            {
+                logger.LogWarning("Validation failed for CreateUserCommand: {Errors}", validationResult.Errors);
+            }
+            
             return validationResult.Errors
                 .Select(error => Error.Validation(code: error.PropertyName, description: error.ErrorMessage))
                 .ToList();
@@ -38,6 +55,10 @@ public class CreateUserCommandHandler(
 
         if (identityResult.Succeeded == false)
         {
+            using (LogContext.PushProperty("UserInfo", userInfo))
+            {
+                logger.LogWarning("User creation failed: {Errors}", identityResult.Errors);
+            }
             return identityResult.Errors.Select(error =>
                 Error.Validation(code: error.Code, description: error.Description)).ToList();
         }
@@ -49,6 +70,8 @@ public class CreateUserCommandHandler(
             // return roleIdentityResult.Errors.Select(error =>
             //     Error.Failure(code: error.Code, description: error.Description)).ToList();
             //return Error.Failure();
+            logger.LogWarning("User role assignment failed: {Errors}", roleIdentityResult.Errors);
+
         }
 
         await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Application.Settings;
+using Opulenza.Infrastructure.Settings;
 
 namespace Opulenza.Application.Services;
 

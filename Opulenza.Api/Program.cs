@@ -1,9 +1,12 @@
 using Opulenza.Api;
-using Opulenza.Infrastructure.Common.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddPresentation(builder.Configuration);
+
+// hijacking the default logging
+builder.Host.UseSerilog();
 
 var app = builder.Build();
 
@@ -17,6 +20,8 @@ var app = builder.Build();
 //Configure the HTTP request pipeline.
 
 // #endregion
+
+app.UseSerilogRequestLogging();
 
 app.UseSwagger();
 
