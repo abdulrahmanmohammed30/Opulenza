@@ -14,7 +14,7 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
             .IsRequired();
        
         builder.Property(p => p.Description)
-            .HasColumnType("varchar")
+            .HasColumnType("varchar(max)")
             .IsRequired();            
 
         // [Name]_[Id] 
@@ -54,11 +54,6 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
             .HasForeignKey(p=>p.ProductId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
-
-        // builder.HasMany(p => p.Ratings)
-        //     .WithOne()
-        //     .OnDelete(DeleteBehavior.Cascade)
-        //     .IsRequired();
         
         builder.HasMany(p => p.Categories)
             .WithMany(c => c.Products);

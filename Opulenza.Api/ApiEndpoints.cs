@@ -33,4 +33,15 @@ public static class ApiEndpoints
         public const string GetUserAddress = $"{Base}/address";
         public const string UpdateAddress = $"{Base}/address";
     }
+
+    public static class Products
+    {
+        private const string Base = $"{ApiBase}/products";
+        
+        public const string GetProducts = $"{Base}";
+        public const string GetProduct = $"{Base}/{{id}}";
+        public const string AddProduct = $"{Base}";
+        public const string UpdateProduct = $"{Base}/{{id}}";
+        public const string DeleteProduct = $"{Base}/{{id}}";
+    }
 }

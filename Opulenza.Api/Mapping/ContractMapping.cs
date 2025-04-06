@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
+﻿using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
 using Opulenza.Application.Features.Authentication.Commands.RequestResetPassword;
 using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
 using Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Queries.Login;
+using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Products.Queries.GetProductQuery;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
-using Opulenza.Application.Features.Users.Commands.Create;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
 using Opulenza.Application.Features.Users.Commands.UploadImage;
 using Opulenza.Application.Features.Users.Queries.GetUser;
 using Opulenza.Contracts.Auth;
+using Opulenza.Contracts.Products;
 using Opulenza.Contracts.Users;
 using LoginRequest = Opulenza.Contracts.Auth.LoginRequest;
 using RegisterRequest = Opulenza.Contracts.Auth.RegisterRequest;
@@ -152,4 +153,27 @@ public static class ContractMapping
         };
     }
 
+    public static AddProductCommand MapToAddProductCommand(this AddProductRequest addProductRequest)
+    {
+        return new AddProductCommand()
+        {
+            Name = addProductRequest.Name,
+            Description = addProductRequest.Description,
+            Price = addProductRequest.Price,
+            DiscountPrice = addProductRequest.DiscountPrice,
+            Tax = addProductRequest.Tax,
+            TaxIncluded = addProductRequest.TaxIncluded,
+            Brand = addProductRequest.Brand,
+            StockQuantity = addProductRequest.StockQuantity,
+            IsAvailable = addProductRequest.IsAvailable,
+            Categories = addProductRequest.Categories,
+        };
+    }
+    
+    public static ProductResponse MapToProductResponse(this ProductResult productResult)
+    {
+        return new ProductResponse()
+        {
+        };
+    }
 }

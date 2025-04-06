@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 using Opulenza.Api.Services;
 using Opulenza.Application;
@@ -10,14 +9,16 @@ using Opulenza.Application.Services;
 using Opulenza.Infrastructure;
 using Opulenza.Infrastructure.Services;
 using Serilog;
-using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Opulenza.Api;
 
 public static class DependencyInjection
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services, IConfiguration configuration) {
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.Conventions.Add(new HttpVerbConvention());
+        });
         services.AddCors(options =>
         {
             options.AddPolicy("default", p => p.AllowAnyOrigin()
@@ -52,6 +53,30 @@ public static class DependencyInjection
                 Title = "Opulenza API",
             });
             
+            setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+            {
+                In = ParameterLocation.Header,
+                Description = "Please provide a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
+            });
+            
+            setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement()
+            {
+                {
+                    new OpenApiSecurityScheme()
+                    {
+                        Reference = new OpenApiReference()
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
         });
         
         services.AddScoped<IUploadFileService, UploadFileService>();

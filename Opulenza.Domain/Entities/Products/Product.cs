@@ -28,7 +28,7 @@ public class Product: BaseEntity
 
     public List<ProductImage>? Images { get; set; }
 
-    public List<Rating> Ratings { get; set; } = new List<Rating>();
+    public List<Rating>? Ratings { get; set; } 
 
     public List<Category>? Categories { get; set; }
     

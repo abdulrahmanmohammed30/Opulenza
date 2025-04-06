@@ -1,6 +1,8 @@
-﻿using Opulenza.Application.Features.Users.Commands.Create;
+﻿using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Users.Commands.Create;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Queries.GetUser;
+using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Application.Mapping;

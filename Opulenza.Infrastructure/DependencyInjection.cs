@@ -5,11 +5,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Application.Features.Products.Queries.GetProductQuery;
 using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Users;
 using Opulenza.Infrastructure.Carts.Persistence;
+using Opulenza.Infrastructure.Categories.Persistence;
 using Opulenza.Infrastructure.Common.Persistence;
 using Opulenza.Infrastructure.Interceptors;
+using Opulenza.Infrastructure.Products.Persistence;
 using Opulenza.Infrastructure.Settings;
 using Opulenza.Infrastructure.Users.Persistence;
 using Opulenza.Infrastructure.Wishlists.Persistence;
@@ -59,7 +62,9 @@ public static class DependencyInjection
         services.AddScoped(typeof(ISoftDeleteRepository<>), typeof(SoftDeleteRepository<>));
         services.AddScoped(typeof(IOptionalSoftDeleteRepository<>), typeof(OptionalSoftDeleteRepository<>));
         services.AddScoped<IUserAddressRepository, UserAddressRepository>();
-        
+        services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<ICategoryRepository, CategoryRepository>();
+
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
                 options.Password.RequireDigit = false;
