@@ -170,7 +170,7 @@ public class LoginWithGitHubCallbackHandler(
                     };
 
                     userImageRepository.Add(userImage);
-                    await unitOfWork.CommitChangesAsync();
+                    await unitOfWork.CommitChangesAsync(cancellationToken);
                 }
                 // create user cart 
                 var cart = new Cart()
@@ -180,7 +180,7 @@ public class LoginWithGitHubCallbackHandler(
         
                 // create user wishlist and cart 
                 cartRepository.Add(cart);
-                await unitOfWork.CommitChangesAsync();
+                await unitOfWork.CommitChangesAsync(cancellationToken);
             }
 
             // Link the user to the external login provider 

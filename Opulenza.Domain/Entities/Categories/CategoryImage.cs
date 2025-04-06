@@ -7,4 +7,4 @@ public class CategoryImage: File
     public int CategoryId { get; set; }
     
     public bool IsFeaturedImage { get; set; }
-}
+}   

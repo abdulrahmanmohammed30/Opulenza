@@ -68,7 +68,6 @@ public class AccountController(
         return result.Match(_ => NoContent(), Problem);
     }
 
-    //[Authorize]
     [HttpGet(ApiEndpoints.Authentication.ConfirmEmail)]
     public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailRequest changePasswordRequest,
         CancellationToken cancellationToken)
@@ -83,7 +82,6 @@ public class AccountController(
 
         return result.Match(_ => NoContent(), Problem);
     }
-
 
     [HttpPost(ApiEndpoints.Authentication.RequestResetPassword)]
     public async Task<IActionResult> RequestResetPassword(SendResetPasswordRequest sendResetPasswordRequest,
@@ -115,9 +113,8 @@ public class AccountController(
         return Challenge(properties, "GitHub");
     }
 
-
     [HttpGet(ApiEndpoints.Authentication.LoginWithGitHubCallback)]
-    public async Task<IActionResult> LoginWithGitHubCallback(string returnUrl = "/", string? remoteError = null)
+    public async Task<IActionResult> LoginWithGitHubCallback(CancellationToken cancellationToken, string returnUrl = "/", string? remoteError = null)
     {
         var command = new LoginWithGitHubCallbackCommand()
         {
@@ -125,7 +122,7 @@ public class AccountController(
             RemoteError = remoteError
         };
             
-        var result = await mediator.Send(command);
+        var result = await mediator.Send(command, cancellationToken);
 
         if (result.IsError)
         {
@@ -147,15 +144,14 @@ public class AccountController(
                                 $"&expiration={WebUtility.UrlEncode(result.Value.Expiration.ToString("o"))}";
         return new RedirectResult(clientRedirectUrl);
     }
- 
     
     [Authorize]
     [HttpDelete]
     [Route(ApiEndpoints.Authentication.DeleteAccount)]
-    public async Task<IActionResult> DeleteUser()
+    public async Task<IActionResult> DeleteUser(CancellationToken cancellationToken)
     {
         var command = new DeleteUserCommand();
-        var result = await mediator.Send(command);
+        var result = await mediator.Send(command, cancellationToken);
         return result.Match(_ => NoContent(), Problem);
     }
 }

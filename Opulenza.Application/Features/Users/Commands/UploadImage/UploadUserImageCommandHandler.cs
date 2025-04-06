@@ -47,7 +47,7 @@ public class UploadUserImageCommandHandler(
         else
             repository.Add(userImage);
 
-        await unitOfWork.CommitChangesAsync();
+        await unitOfWork.CommitChangesAsync(cancellationToken);
 
         return new UploadUserImageResult()
         {

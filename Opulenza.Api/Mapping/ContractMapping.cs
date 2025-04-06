@@ -4,7 +4,7 @@ using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
 using Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Queries.Login;
 using Opulenza.Application.Features.Products.Commands.AddProduct;
-using Opulenza.Application.Features.Products.Queries.GetProductQuery;
+using Opulenza.Application.Features.Products.Queries.Common;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
@@ -32,7 +32,7 @@ public static class ContractMapping
             Password = registerRequest.Password
         };
     }
-    
+
     public static LoginQuery MapToLoginQuery
         (this LoginRequest loginRequest)
     {
@@ -42,7 +42,7 @@ public static class ContractMapping
             Password = loginRequest.Password
         };
     }
-    
+
     public static LoginResponse MapToLoginResponse(this LoginResult loginResult)
     {
         return new LoginResponse()
@@ -100,7 +100,7 @@ public static class ContractMapping
             ZipCode = updateUserAddressRequest.ZipCode,
         };
     }
-    
+
     public static UserResponse MapToGetUserQuery(this GetUserQueryResult getUserRequest)
     {
         return new UserResponse()
@@ -112,7 +112,7 @@ public static class ContractMapping
             Address = getUserRequest.Address?.MapToUserAddressResponse(),
         };
     }
-    
+
     public static UserAddressResponse MapToUserAddressResponse(this GetUserAddressQueryResult userAddress)
     {
         return new UserAddressResponse()
@@ -123,16 +123,18 @@ public static class ContractMapping
             ZipCode = userAddress.ZipCode,
         };
     }
-    
-    public static RequestResetPasswordCommand MapToRequestResetPasswordCommand(this SendResetPasswordRequest resetPasswordCommand)
+
+    public static RequestResetPasswordCommand MapToRequestResetPasswordCommand(
+        this SendResetPasswordRequest resetPasswordCommand)
     {
         return new RequestResetPasswordCommand()
         {
             Email = resetPasswordCommand.Email
         };
     }
-    
-    public static ResetPasswordCommand MapToResetPasswordCommand(this Opulenza.Contracts.Auth.ResetPasswordRequest resetPasswordRequest)
+
+    public static ResetPasswordCommand MapToResetPasswordCommand(
+        this Opulenza.Contracts.Auth.ResetPasswordRequest resetPasswordRequest)
     {
         return new ResetPasswordCommand()
         {
@@ -141,7 +143,7 @@ public static class ContractMapping
             Email = resetPasswordRequest.Email
         };
     }
-    
+
     public static ExternalLoginResponse MapToExternalLoginResponse(this ExternalLoginResult externalLoginResult)
     {
         return new ExternalLoginResponse()
@@ -169,11 +171,42 @@ public static class ContractMapping
             Categories = addProductRequest.Categories,
         };
     }
-    
-    public static ProductResponse MapToProductResponse(this ProductResult productResult)
+
+    public static ProductResponse MapToProductResponse(this ProductResult p)
     {
         return new ProductResponse()
         {
+            Id = p.Id,
+            Slug = p.Slug,
+            Name = p.Name,
+            Description = p.Description,
+            Brand = p.Brand,
+            Tax = p.Tax,
+            TaxIncluded = p.TaxIncluded,
+            Price = p.Price,
+            DiscountPrice = p.DiscountPrice,
+            IsAvailable = p.IsAvailable,
+            StockQuantity = p.StockQuantity,
+            Images = p.Images?.Select(i => new ImageResponse()
+            {
+                Id = i.Id,
+                FilePath = i.FilePath,
+                IsFeaturedImage = i.IsFeaturedImage,
+            }).ToList(),
+            Categories = p.Categories?.Select(c => new CategoryResponse()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Slug = c.Slug,
+                ParentId = c.ParentId
+            }).ToList(),
+            Ratings = p.Ratings?.Select(r => new RatingResponse()
+            {
+                Value = r.Value,
+                UserId = r.UserId,
+                ReviewText = r.ReviewText,
+            }).ToList()
         };
     }
 }

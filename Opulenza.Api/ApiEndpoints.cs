@@ -39,7 +39,8 @@ public static class ApiEndpoints
         private const string Base = $"{ApiBase}/products";
         
         public const string GetProducts = $"{Base}";
-        public const string GetProduct = $"{Base}/{{id}}";
+        public const string GetProductById = $"{Base}/{{id:int}}";
+        public const string GetProductBySlug = $"{Base}/{{slug}}";
         public const string AddProduct = $"{Base}";
         public const string UpdateProduct = $"{Base}/{{id}}";
         public const string DeleteProduct = $"{Base}/{{id}}";

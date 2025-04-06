@@ -1,6 +1,6 @@
-﻿namespace Opulenza.Contracts.Products;
+﻿namespace Opulenza.Application.Features.Products.Queries.Common;
 
-public class ProductResponse
+public class ProductResult
 {
     public int Id { get; init; }
 
@@ -24,9 +24,9 @@ public class ProductResponse
 
     public bool IsAvailable { get; init; }
 
-    public List<ImageResponse>? Images { get; init; }
+    public List<ImageResult>? Images { get; init; }
 
-    public List<RatingResponse>? Ratings { get; init; }
+    public List<RatingResult>? Ratings { get; init; }
 
-    public List<CategoryResponse>? Categories { get; init; }
+    public List<CategoryResult>? Categories { get; init; }
 }

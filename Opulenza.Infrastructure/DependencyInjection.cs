@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
-using Opulenza.Application.Features.Products.Queries.GetProductQuery;
 using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Users;
 using Opulenza.Infrastructure.Carts.Persistence;

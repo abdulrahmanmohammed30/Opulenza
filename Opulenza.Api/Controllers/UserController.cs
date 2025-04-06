@@ -16,14 +16,14 @@ public class UserController(ISender mediator):CustomController
 {
     [Authorize]
     [HttpPost(ApiEndpoints.Users.UploadImage)]
-    public async Task<IActionResult> UploadImage(IFormFile file)
+    public async Task<IActionResult> UploadImage(IFormFile file, CancellationToken cancellationToken)
     {
         var command = new UploadUserImageCommand()
         {
             File = file
         };
         
-        var result = await mediator.Send(command);
+        var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(_ => NoContent(), Problem);
     }
@@ -65,7 +65,6 @@ public class UserController(ISender mediator):CustomController
     [HttpGet(ApiEndpoints.Users.GetUser)]
     public async Task<IActionResult> GetUser(CancellationToken cancellationToken)
     {
-        var headers = HttpContext.Request.Headers;
         var result = await mediator.Send(new GetUserQuery(), cancellationToken);
         return result.Match(value=>Ok(value.MapToGetUserQuery()), Problem);
     }

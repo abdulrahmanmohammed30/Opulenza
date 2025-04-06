@@ -86,7 +86,7 @@ public class CreateUserCommandHandler(
 
         // create user wishlist and cart 
         cartRepository.Add(cart);
-        await unitOfWork.CommitChangesAsync();
+        await unitOfWork.CommitChangesAsync(cancellationToken);
 
 
         var emailConfirmationToken = await userManager.GenerateEmailConfirmationTokenAsync(user);

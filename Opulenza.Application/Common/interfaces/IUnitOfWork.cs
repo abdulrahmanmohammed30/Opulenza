@@ -2,6 +2,6 @@
 
 public interface IUnitOfWork
 {
-    Task CommitChangesAsync();
+    Task CommitChangesAsync(CancellationToken cancellationToken = default);
     Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default);
 }

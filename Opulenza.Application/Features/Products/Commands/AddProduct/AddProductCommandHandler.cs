@@ -14,11 +14,11 @@ public class AddProductCommandHandler(
     IUnitOfWork unitOfWork)
     : IRequestHandler<AddProductCommand, ErrorOr<int>>
 {
-    private async Task<string> GenerateUniqueSlugAsync(string productName)
+    private async Task<string> GenerateUniqueSlugAsync(string productName, CancellationToken cancellationToken)
     {
         var slug = SlugHelper.GenerateSlug(productName);
 
-        var lastSlug = await productRepository.GetLastSlugWithName(slug);
+        var lastSlug = await productRepository.GetLastSlugWithName(slug, cancellationToken);
 
         if (lastSlug == null)
             return slug;
@@ -52,11 +52,11 @@ public class AddProductCommandHandler(
             TaxIncluded = request.TaxIncluded,
             IsAvailable = request.IsAvailable,
             StockQuantity = request.StockQuantity,
-            Slug = await GenerateUniqueSlugAsync(request.Name)
+            Slug = await GenerateUniqueSlugAsync(request.Name, cancellationToken)
         };
 
         productRepository.Add(product);
-        await unitOfWork.CommitChangesAsync();
+        await unitOfWork.CommitChangesAsync(cancellationToken);
 
         // Add categories to the product 
         if (request.Categories != null)
@@ -73,7 +73,7 @@ public class AddProductCommandHandler(
 
             product.Categories = categories;
             productRepository.Update(product);
-            await unitOfWork.CommitChangesAsync();
+            await unitOfWork.CommitChangesAsync(cancellationToken);
         }
 
         return product.Id;

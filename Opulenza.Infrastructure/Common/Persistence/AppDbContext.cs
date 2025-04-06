@@ -36,9 +36,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 
-    public async Task CommitChangesAsync()
+    public async Task CommitChangesAsync(CancellationToken cancellationToken)
     {
-        await SaveChangesAsync();
+        await SaveChangesAsync(cancellationToken);
     }
 
     public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)

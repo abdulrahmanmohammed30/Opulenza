@@ -4,24 +4,25 @@ using Opulenza.Domain.Common;
 
 namespace Opulenza.Infrastructure.Common.Persistence;
 
-public class Repository<T> : IRepository<T> where T:BaseEntity
+public class Repository<T> : IRepository<T> where T : BaseEntity
 {
     private readonly AppDbContext _context;
     private readonly DbSet<T> _entitySet;
-    
-    public Repository(AppDbContext context) {
+
+    public Repository(AppDbContext context)
+    {
         _context = context;
         _entitySet = context.Set<T>();
     }
-    
-    public async Task<T?> GetByIdAsync(int id)
+
+    public async Task<T?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-       return await _entitySet.FindAsync(id);
+        return await _entitySet.FindAsync([id], cancellationToken);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync()
+    public async Task<IEnumerable<T>> GetAllAsync(CancellationToken cancellationToken = default)
     {
-        return await _entitySet.ToListAsync();
+        return await _entitySet.ToListAsync(cancellationToken);
     }
 
     public void Add(T entity)
@@ -31,9 +32,9 @@ public class Repository<T> : IRepository<T> where T:BaseEntity
 
     public void Update(T entity)
     {
-        _context.Update(entity);    
+        _context.Update(entity);
     }
-    
+
     public void Delete(T entity)
     {
         _context.Remove(entity);
