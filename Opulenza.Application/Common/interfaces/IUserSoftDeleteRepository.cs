@@ -2,7 +2,7 @@
 
 namespace Opulenza.Application.Common.interfaces;
 
-public interface ISoftDeleteRepository<T>  where T:ISoftDeletable, IUserOwned
+public interface IUserSoftDeleteRepository<T>  where T:ISoftDeletable, IUserOwned
 {
     Task SoftDeleteByUserIdAsync(int userId);
 }

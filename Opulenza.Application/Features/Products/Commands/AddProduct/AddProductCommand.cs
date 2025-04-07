@@ -17,7 +17,5 @@ public class AddProductCommand: IRequest<ErrorOr<int>>
 
     public string? Brand { get; init; }
     public int? StockQuantity { get; init; }
-    public bool IsAvailable { get; init; }
-    
     public List<int>? Categories { get; init; }
 }

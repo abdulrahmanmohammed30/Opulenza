@@ -9,7 +9,6 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
         RuleFor(p => p.Name)
             .NotEmpty().WithMessage("Name is required")
             .MaximumLength(50).WithMessage("Name must not exceed 50 characters");
-        // .Matches(@"^[\x20-\x7E]+$").WithMessage("Name must contain only English characters and allowed special characters");
 
         RuleFor(p => p.Description)
             .NotEmpty().WithMessage("Description is required");
@@ -38,12 +37,12 @@ public class AddProductCommandValidator : AbstractValidator<AddProductCommand>
             .NotEmpty().WithMessage("StockQuantity is required")
             .GreaterThanOrEqualTo(0).WithMessage("StockQuantity must be greater than or equal to 0");
 
-        RuleFor(p => p.IsAvailable)
-            .NotEmpty().WithMessage("IsAvailable is required");
-
-        RuleFor(p=>p.IsAvailable)
-            .Equal(true).When(p=>p.StockQuantity > 0).WithMessage("IsAvailable must be true when StockQuantity is greater than 0")
-            .Equal(false).When(p=>p.StockQuantity is null or < 0).WithMessage("IsAvailable must be false when StockQuantity is null or less than 0");
+        // RuleFor(p => p.IsAvailable)
+        //     .NotEmpty().WithMessage("IsAvailable is required");
+        //
+        // RuleFor(p=>p.IsAvailable)
+        //     .Equal(true).When(p=>p.StockQuantity is not null && p.StockQuantity > 0).WithMessage("IsAvailable must be true when StockQuantity is greater than 0")
+        //     .Equal(false).When(p=>p.StockQuantity is null or < 0).WithMessage("IsAvailable must be false when StockQuantity is null or less than 0");
       
         RuleForEach(p => p.Categories)
             .GreaterThan(0).WithMessage("Category Id must be greater than 0");

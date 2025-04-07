@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProductId;
+namespace Opulenza.Application.Features.Products.Queries.GetProductById;
 
 public class GetProductByIdQueryValidator: AbstractValidator<GetProductByIdQuery>
 {

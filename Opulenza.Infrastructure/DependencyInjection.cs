@@ -58,11 +58,12 @@ public static class DependencyInjection
         services.AddScoped<ICartRepository, CartRepository>();
         services.AddScoped<IWishlistRepository, WishlistRepository>();
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
-        services.AddScoped(typeof(ISoftDeleteRepository<>), typeof(SoftDeleteRepository<>));
+        services.AddScoped(typeof(IUserSoftDeleteRepository<>), typeof(UserSoftDeleteRepository<>));
         services.AddScoped(typeof(IOptionalSoftDeleteRepository<>), typeof(OptionalSoftDeleteRepository<>));
         services.AddScoped<IUserAddressRepository, UserAddressRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped(typeof(IProductSoftDeleteRepository<>), typeof(ProductSoftDeleteRepository<>));
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {

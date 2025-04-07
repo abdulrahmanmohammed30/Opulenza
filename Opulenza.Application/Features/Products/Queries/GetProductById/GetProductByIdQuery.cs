@@ -2,7 +2,7 @@
 using MediatR;
 using Opulenza.Application.Features.Products.Queries.Common;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProductId;
+namespace Opulenza.Application.Features.Products.Queries.GetProductById;
 
 public class GetProductByIdQuery: IRequest<ErrorOr<ProductResult>>
 {

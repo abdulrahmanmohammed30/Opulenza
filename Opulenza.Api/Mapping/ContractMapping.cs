@@ -4,7 +4,10 @@ using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
 using Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Queries.Login;
 using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Products.Commands.DeleteProduct;
+using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 using Opulenza.Application.Features.Products.Queries.Common;
+using Opulenza.Application.Features.Products.Queries.GetProducts;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
@@ -167,7 +170,6 @@ public static class ContractMapping
             TaxIncluded = addProductRequest.TaxIncluded,
             Brand = addProductRequest.Brand,
             StockQuantity = addProductRequest.StockQuantity,
-            IsAvailable = addProductRequest.IsAvailable,
             Categories = addProductRequest.Categories,
         };
     }
@@ -207,6 +209,94 @@ public static class ContractMapping
                 UserId = r.UserId,
                 ReviewText = r.ReviewText,
             }).ToList()
+        };
+    }
+    // str is not null 
+    // str length is greater than 0 
+    // str at position  0 is - or + 
+
+    private static SortOptions GetSortingOption(string? sort)
+    {
+        if (string.IsNullOrWhiteSpace(sort))
+            return SortOptions.None;
+
+        return sort[0] == '+' ? SortOptions.Asc : sort[0] == '-' ? SortOptions.Desc : SortOptions.None;
+    }
+
+    private static SortBy GetSortBy(string? sort)
+    {
+        if (string.IsNullOrWhiteSpace(sort))
+            return SortBy.None;
+
+        if (Enum.TryParse(typeof(SortBy),  sort.AsSpan(1), true, out var sortBy) == false)
+            return SortBy.None;
+
+        return (SortBy)sortBy;
+    }
+
+    public static GetProductsQuery MapToGetProductsQuery(this GetProductsRequest request)
+    {
+        return new GetProductsQuery()
+        {
+            PageNumber = request.PageNumber,
+            PageSize = request.PageSize,
+            MinPrice = request.MinPrice,
+            MaxPrice = request.MaxPrice,
+            IsAvailable = request.IsAvailable,
+            Category = request.Category,
+            Brand = request.Brand,
+            Search = request.Search,
+            DiscountOnly = request.DiscountOnly,
+            MinRating = request.MinRating,
+            SortBy = GetSortBy(request.Sort),
+            SortOptions = GetSortingOption(request.Sort)
+        };
+    }
+
+    public static GetProductListResponse MapToGetProductListResponse(this GetProductListResult getProductListResult)
+    {
+        return new GetProductListResponse()
+        {
+            Products = getProductListResult.Products.Select(p => new GetProductListItemResponse()
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Description = p.Description,
+                Slug = p.Slug,
+                IsAvailable = p.IsAvailable,
+                StockQuantity = p.StockQuantity,
+                Price = p.Price,
+                DiscountPrice = p.DiscountPrice,
+                Brand = p.Brand,
+                Tax = p.Tax,
+                TaxIncluded = p.TaxIncluded,
+            }).ToList(),
+            TotalCount = getProductListResult.TotalCount,
+        };
+    }
+    
+    public static UpdateProductCommand MapToUpdateProductRequest (this UpdateProductRequest updateProductRequest)
+    {
+        return new UpdateProductCommand()
+        {
+            Id = updateProductRequest.Id,
+            Name = updateProductRequest.Name,
+            Description = updateProductRequest.Description,
+            Price = updateProductRequest.Price,
+            DiscountPrice = updateProductRequest.DiscountPrice,
+            Tax = updateProductRequest.Tax,
+            TaxIncluded = updateProductRequest.TaxIncluded,
+            Brand = updateProductRequest.Brand,
+            StockQuantity = updateProductRequest.StockQuantity,
+            Categories = updateProductRequest.Categories
+        };
+    }
+
+    public static DeleteProductCommand MapToDeleteProductCommand(this DeleteProductRequest deleteProductRequest)
+    {
+        return new DeleteProductCommand()
+        {
+            ProductId = deleteProductRequest.ProductId,
         };
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 using Opulenza.Application.Features.Products.Queries.Common;
 using Opulenza.Application.Features.Users.Commands.Create;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
@@ -43,7 +44,7 @@ public static class ContractMapping
             ZipCode = userAddress.ZipCode,
         };
     }
-    
+
     public static ProductResult MapToProductResult(this Product p)
     {
         return new ProductResult()
@@ -80,5 +81,26 @@ public static class ContractMapping
                 ReviewText = r.ReviewText,
             }).ToList()
         };
+    }
+
+    public static Dictionary<string, string> ToKeyValueDictionary(this UpdateProductCommand updateProductCommand)
+    {
+        var dict = new Dictionary<string, string>();
+
+        // Use the null-coalescing operator to handle nullable types.
+        dict["Id"] = updateProductCommand.Id?.ToString() ?? string.Empty;
+        dict["Name"] = updateProductCommand.Name ?? string.Empty;
+        dict["Description"] = updateProductCommand.Description ?? string.Empty;
+        dict["Price"] = updateProductCommand.Price?.ToString() ?? string.Empty;
+        dict["DiscountPrice"] = updateProductCommand.DiscountPrice?.ToString() ?? string.Empty;
+        dict["Tax"] = updateProductCommand.Tax?.ToString() ?? string.Empty;
+        dict["TaxIncluded"] = updateProductCommand.TaxIncluded?.ToString() ?? string.Empty;
+        dict["Brand"] = updateProductCommand.Brand ?? string.Empty;
+        dict["StockQuantity"] = updateProductCommand.StockQuantity?.ToString() ?? string.Empty;
+
+        // Convert the list of categories to a comma-separated string.
+        dict["Categories"] = updateProductCommand.Categories != null ? string.Join(",", updateProductCommand.Categories) : string.Empty;
+
+        return dict;
     }
 }

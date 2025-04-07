@@ -3,7 +3,7 @@ using Opulenza.Domain.Entities.Products;
 
 namespace Opulenza.Domain.Entities.Ratings;
 
-public class Rating:BaseEntity, IUserOwned
+public class Rating:BaseEntity, IUserOwned, IProductOwned
 {
     public int Value { get; set; }
     public int ProductId { get; set; }

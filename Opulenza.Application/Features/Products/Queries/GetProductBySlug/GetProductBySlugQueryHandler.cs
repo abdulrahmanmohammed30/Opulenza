@@ -9,7 +9,7 @@ public class GetProductBySlugQueryHandler(IProductRepository productRepository):
 {
     public async Task<ErrorOr<ProductResult>> Handle(GetProductBySlugQuery request, CancellationToken cancellationToken)
     {
-        var product= await productRepository.GetProductWithSlug(request.Slug,cancellationToken);
+        var product= await productRepository.GetProductWithSlugAsync(request.Slug,cancellationToken);
        
         if (product is null)
         {

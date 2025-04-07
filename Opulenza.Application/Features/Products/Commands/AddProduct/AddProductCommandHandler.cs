@@ -18,7 +18,7 @@ public class AddProductCommandHandler(
     {
         var slug = SlugHelper.GenerateSlug(productName);
 
-        var lastSlug = await productRepository.GetLastSlugWithName(slug, cancellationToken);
+        var lastSlug = await productRepository.GetLastSlugWithNameAsync(slug, cancellationToken);
 
         if (lastSlug == null)
             return slug;
@@ -50,7 +50,7 @@ public class AddProductCommandHandler(
             DiscountPrice = request.DiscountPrice,
             Tax = request.Tax,
             TaxIncluded = request.TaxIncluded,
-            IsAvailable = request.IsAvailable,
+            IsAvailable = request.StockQuantity is > 0,
             StockQuantity = request.StockQuantity,
             Slug = await GenerateUniqueSlugAsync(request.Name, cancellationToken)
         };
@@ -79,3 +79,4 @@ public class AddProductCommandHandler(
         return product.Id;
     }
 }
+

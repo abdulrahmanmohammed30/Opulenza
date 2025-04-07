@@ -1,9 +1,6 @@
-﻿using ErrorOr;
-using MediatR;
+﻿namespace Opulenza.Contracts.Products;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProducts;
-
-public class GetProductsQuery: PaginatedQuery, IRequest<ErrorOr<GetProductListResult>>
+public class GetProductsRequest: PaginatedRequest
 {
     // free text search, scans the name, description fields
     public string? Search { get; set; }
@@ -22,7 +19,5 @@ public class GetProductsQuery: PaginatedQuery, IRequest<ErrorOr<GetProductListRe
     
     public bool? DiscountOnly { get; init; }
     
-    public SortBy? SortBy { get; set; }
-    
-    public SortOptions? SortOptions { get; set; }
+    public string? Sort { get; set; }
 }

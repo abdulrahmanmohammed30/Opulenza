@@ -46,9 +46,9 @@ public class HttpVerbConvention : IActionModelConvention
                     break;
 
                 case "PUT":
-                    if (HasResponse(action, StatusCodes.Status200OK) == false)
+                    if (HasResponse(action, StatusCodes.Status204NoContent) == false)
                     {
-                        action.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status200OK));
+                        action.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status204NoContent));
                     }
 
                     action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ValidationProblemDetails),
@@ -58,7 +58,7 @@ public class HttpVerbConvention : IActionModelConvention
                     break;
 
                 case "DELETE":
-                    action.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status200OK));
+                    action.Filters.Add(new ProducesResponseTypeAttribute(StatusCodes.Status204NoContent));
                     action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ProblemDetails),
                         StatusCodes.Status404NotFound));
                     action.Filters.Add(new ProducesResponseTypeAttribute(typeof(ProblemDetails),

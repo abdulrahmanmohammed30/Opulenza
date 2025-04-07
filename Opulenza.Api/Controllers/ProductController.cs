@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
+using Opulenza.Application.Features.Products.Queries.GetProductById;
 using Opulenza.Application.Features.Products.Queries.GetProductBySlug;
-using Opulenza.Application.Features.Products.Queries.GetProductId;
 using Opulenza.Contracts.Products;
 
 namespace Opulenza.Api.Controllers;
@@ -60,4 +60,46 @@ public class ProductController(ISender mediator) : CustomController
 
         return result.Match(product => Ok(product.MapToProductResponse()), Problem);
     }
+
+    [HttpGet]
+    [Route(ApiEndpoints.Products.GetProducts)]
+    [ProducesResponseType(typeof(GetProductListResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProducts([FromQuery] GetProductsRequest request,
+        CancellationToken cancellationToken)
+    {
+        var query = request.MapToGetProductsQuery();
+
+        var results = await mediator.Send(query, cancellationToken);
+
+        return results.Match(
+            productList => Ok(productList.MapToGetProductListResponse()),
+            Problem);
+    }
+
+    [HttpPut]
+    [Route(ApiEndpoints.Products.UpdateProduct)]
+    public async Task<IActionResult> UpdateProduct(UpdateProductRequest request, CancellationToken cancellationToken)
+    {
+        var command = request.MapToUpdateProductRequest();
+
+        var result = await mediator.Send(command, cancellationToken);
+        
+        return result.Match(
+            _ => NoContent(),
+            Problem);
+    }
+
+    [HttpDelete]
+    [Route(ApiEndpoints.Products.DeleteProduct)]
+    public async Task<IActionResult> DeleteProduct(DeleteProductRequest request, CancellationToken cancellationToken)
+    {
+        var command = request.MapToDeleteProductCommand();
+
+        var result = await mediator.Send(command, cancellationToken);
+        
+        return result.Match(
+            _ => NoContent(),
+            Problem);
+    }
+
 }

@@ -13,11 +13,11 @@ namespace Opulenza.Application.Features.Users.Commands.DeleteUser;
 public class DeleteUserCommandHandler(
     UserManager<ApplicationUser> userManager,
     ICurrentUserProvider currentUserProvider,
-    ISoftDeleteRepository<Cart> cartSoftDeleteRepository,
-    ISoftDeleteRepository<Rating> ratingSoftDeleteRepository,
-    ISoftDeleteRepository<UserAddress> userAddressSoftDeleteRepository,
-    ISoftDeleteRepository<UserImage> userImageSoftDeleteRepository,
-    ISoftDeleteRepository<WishListItem> wishListItemSoftDeleteRepository,
+    IUserSoftDeleteRepository<Cart> cartUserSoftDeleteRepository,
+    IUserSoftDeleteRepository<Rating> ratingUserSoftDeleteRepository,
+    IUserSoftDeleteRepository<UserAddress> userAddressUserSoftDeleteRepository,
+    IUserSoftDeleteRepository<UserImage> userImageUserSoftDeleteRepository,
+    IUserSoftDeleteRepository<WishListItem> wishListItemUserSoftDeleteRepository,
     IUnitOfWork unitOfWork, ILogger<DeleteUserCommandHandler> logger) : IRequestHandler<DeleteUserCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
@@ -40,11 +40,11 @@ public class DeleteUserCommandHandler(
                 await userManager.UpdateAsync(user);
 
                 // I did not use IUnitOfWord, because I use ExecuteUpdate that sends the SQL UPDATE command directly to the database 
-                await cartSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
-                await ratingSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
-                await userAddressSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
-                await userImageSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
-                await wishListItemSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
+                await cartUserSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
+                await ratingUserSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
+                await userAddressUserSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
+                await userImageUserSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
+                await wishListItemUserSoftDeleteRepository.SoftDeleteByUserIdAsync(user.Id);
 
                 // for the user order, If the delete was permanent, the userId gets set to null but currently 
                 // since I cannot soft delete the order because the orders should not be deleted when users gets deleted 
