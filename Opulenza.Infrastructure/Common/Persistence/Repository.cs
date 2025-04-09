@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Opulenza.Application.Common.interfaces;
-using Opulenza.Domain.Common;
 
 namespace Opulenza.Infrastructure.Common.Persistence;
 
-public class Repository<T> : IRepository<T> where T : BaseEntity
+public class Repository<T> : IRepository<T> where T : class, IEntity
 {
     private readonly AppDbContext _context;
     private readonly DbSet<T> _entitySet;

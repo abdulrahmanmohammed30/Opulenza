@@ -1,10 +1,13 @@
 ﻿using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Products.Commands.AddProductImages;
 using Opulenza.Application.Features.Products.Commands.UpdateProduct;
-using Opulenza.Application.Features.Products.Queries.Common;
+using Opulenza.Application.Features.Products.Common;
+using Opulenza.Application.Features.Ratings.Queries.GetRatings;
 using Opulenza.Application.Features.Users.Commands.Create;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Queries.GetUser;
 using Opulenza.Domain.Entities.Products;
+using Opulenza.Domain.Entities.Ratings;
 using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Application.Mapping;
@@ -102,5 +105,15 @@ public static class ContractMapping
         dict["Categories"] = updateProductCommand.Categories != null ? string.Join(",", updateProductCommand.Categories) : string.Empty;
 
         return dict;
+    }
+
+    public static ImageResult MapToImageResult(this ProductImage productImage)
+    {
+        return new ImageResult()
+        {
+            Id = productImage.Id,
+            FilePath = productImage.FilePath,
+            IsFeaturedImage = productImage.IsFeaturedImage
+        };
     }
 }

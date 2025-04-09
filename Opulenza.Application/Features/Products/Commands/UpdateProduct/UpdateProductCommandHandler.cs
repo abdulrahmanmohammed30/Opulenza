@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Products;
 
 namespace Opulenza.Application.Features.Products.Commands.UpdateProduct;
@@ -15,13 +16,11 @@ public class UpdateProductCommandHandler(
 {
     public async Task<ErrorOr<string>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetProductByIdAsync(request.Id.Value, cancellationToken);
-
-
+        // Retrieve the tracked product including its categories.
+        var product = await productRepository.GetProductByIdWithCategoriesAsync(request.Id.Value, cancellationToken);
         if (product == null)
         {
             logger.LogWarning("Product with id {Id} not found", request.Id);
-
             return Error.NotFound("ProductNotFound", $"Product with Id {request.Id} not found");
         }
 
@@ -32,51 +31,43 @@ public class UpdateProductCommandHandler(
             return priceValidationError.Value;
         }
 
-        var updatedProduct = new Product()
-        {
-            Id = product.Id,
-            Slug = product.Slug,
-            Name = request.Name ?? product.Name,
-            Description = request.Description ?? product.Description,
-            Brand = request.Brand ?? product.Brand,
-            Price = request.Price ?? product.Price,
-            DiscountPrice = request.DiscountPrice ?? product.DiscountPrice,
-            Tax = request.Tax ?? product.Tax,
-            TaxIncluded = request.TaxIncluded ?? product.TaxIncluded,
-            StockQuantity = request.StockQuantity ?? product.StockQuantity,
-            IsAvailable = request.StockQuantity == null ? product.IsAvailable : request.StockQuantity is > 0,
-            UpdatedAt = DateTime.UtcNow,
-        };
-
+        product.Name = request.Name!;
+        product.Description = request.Description!;
+        product.Brand = request.Brand;
+        product.Price = request.Price!.Value;
+        product.DiscountPrice = request.DiscountPrice;
+        product.Tax = request.Tax!.Value;
+        product.TaxIncluded = request.TaxIncluded!.Value;
+        product.StockQuantity = request.StockQuantity;
+        product.IsAvailable = request.StockQuantity is > 0;
+        product.UpdatedAt = DateTime.UtcNow;
+        
         // Add categories to the product 
         if (request.Categories != null)
         {
-            var existingCategories = product.Categories == null ? [] : product.Categories.Select(c => c.Id).ToList();
+            // Compute existing category IDs.
+            var existingCategoryIds = product.Categories?.Select(c => c.Id).ToList() ?? new List<int>();
 
-            // categories to add are the categories that the request has but the product doesn't  
-            var categoriesToAdd =
-                request.Categories.Where(categoryId => existingCategories.Contains(categoryId) == false);
+            // Categories to add: IDs present in the request but not already associated.
+            var categoryIdsToAdd = request.Categories.Except(existingCategoryIds);
 
-            var categories = await categoryRepository.GetCategories(categoriesToAdd);
+            var categoriesToAdd = await categoryRepository.GetCategories(categoryIdsToAdd);
 
-            if (request.Categories.Count != categories.Count)
+            // Log missing categories if any.
+            if (request.Categories.Count != categoriesToAdd.Count)
             {
-                var missingCategories = request.Categories.Except(categories.Select(c => c.Id));
-                logger.LogWarning(
-                    "Some categories were not found in the database. Categories that were not found: {Categories}",
-                    missingCategories);
+                var missingCategories = request.Categories.Except(categoriesToAdd.Select(c => c.Id));
+                logger.LogWarning("Some categories were not found in the database. Categories that were not found: {Categories}", missingCategories);
             }
+            
+            // Include already associated categories that are still in the request.
+            var categoriesToKeep = product.Categories?.Where(c => request.Categories.Contains(c.Id)).ToList() ?? new List<Category>();
 
-            foreach (var category in product.Categories ?? [])
-            {
-                if (request.Categories.Contains(category.Id))
-                    categories.Add(category);
-            }
-
-            product.Categories = categories;
+            // Replace with the new combination.
+            product.Categories = categoriesToKeep.Union(categoriesToAdd).ToList();
         }
 
-        productRepository.Update(updatedProduct);
+        // As product is tracked, no explicit Update call is necessary in most patterns.
         await unitOfWork.CommitChangesAsync(cancellationToken);
 
         return "Product updated successfully";

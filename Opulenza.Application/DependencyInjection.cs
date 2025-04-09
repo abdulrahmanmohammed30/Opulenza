@@ -13,6 +13,7 @@ using Opulenza.Application.Behaviors;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Application.Services;
 using Opulenza.Application.Settings;
+using Scrutor;
 
 namespace Opulenza.Application;
 
@@ -75,7 +76,7 @@ public static class DependencyInjection
                 // This tells the GitHub provider to use the external sign-in cookie, which works well with Identity.
                 options.SignInScheme = IdentityConstants.ExternalScheme;
             });
-        
+
         services.AddAuthorization(options =>
         {
             // all action methods are authorized by default 
@@ -86,12 +87,21 @@ public static class DependencyInjection
                 policy.RequireClaim(AuthConstants.AdminUserClaimName, "true"));
         });
 
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
+        services.Scan(selector =>
+        {
+            selector.FromAssemblyOf<ApplicationMarker>()
+                .AddClasses(f => f.InNamespaces("Opulenza.Application"))
+                .UsingRegistrationStrategy(RegistrationStrategy.Throw)
+                .AsMatchingInterface()
+                .WithScopedLifetime();
+        });
+
+        // services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
         services.AddHttpContextAccessor();
-        
+
         return services;
     }
 }

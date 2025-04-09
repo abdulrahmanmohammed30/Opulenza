@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
 using Opulenza.Application.Features.Authentication.Commands.ConfirmEmail;
+using Opulenza.Application.Features.Authentication.Commands.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Commands.RevokeToken;
-using Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Users.Commands.DeleteUser;
 using Opulenza.Contracts.Auth;
 using Opulenza.Domain.Entities.Users;
@@ -154,4 +154,5 @@ public class AccountController(
         var result = await mediator.Send(command, cancellationToken);
         return result.Match(_ => NoContent(), Problem);
     }
+    
 }

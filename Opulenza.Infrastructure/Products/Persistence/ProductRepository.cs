@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Opulenza.Application.Common.interfaces;
-using Opulenza.Application.Features.Products.Queries.Common;
+using Opulenza.Application.Features.Common;
+using Opulenza.Application.Features.Products.Common;
 using Opulenza.Application.Features.Products.Queries.GetProducts;
 using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Products;
@@ -25,7 +26,7 @@ public class ProductRepository(AppDbContext context) : Repository<Product>(conte
             .OrderByDescending(s => s).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<ProductResult?> GetProductWithIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<ProductResult?> GetProductByIdAsync(int id, CancellationToken cancellationToken)
     {
         return await context.Products
             .Include(p => p.Images)
@@ -74,14 +75,14 @@ public class ProductRepository(AppDbContext context) : Repository<Product>(conte
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<Product?> GetProductByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<Product?> GetProductByIdWithCategoriesAsync(int id, CancellationToken cancellationToken)
     {
-        return await context.Products
+        return await context.Products.AsTracking()
             .Include(p => p.Categories)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
-    public async Task<ProductResult?> GetProductWithSlugAsync(string slug, CancellationToken cancellationToken)
+    public async Task<ProductResult?> GetProductBySlugAsync(string slug, CancellationToken cancellationToken)
     {
         return await context.Products
             .Include(p => p.Images)
@@ -228,4 +229,5 @@ public class ProductRepository(AppDbContext context) : Repository<Product>(conte
     {
         return await context.Products.AnyAsync(p => p.Id == productId, cancellationToken);
     }
+    
 }

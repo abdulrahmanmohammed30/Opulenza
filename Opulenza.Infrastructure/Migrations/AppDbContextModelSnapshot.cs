@@ -526,6 +526,10 @@ namespace Opulenza.Infrastructure.Migrations
                     b.Property<bool>("TaxIncluded")
                         .HasColumnType("bit");
 
+                    b.HasIndex("Slug")
+                        .IsUnique()
+                        .HasFilter("[Slug] IS NOT NULL");
+
                     b.ToTable("Products");
                 });
 
@@ -547,7 +551,10 @@ namespace Opulenza.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "ProductId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_User_Product")
+                        .HasFilter("[UserId] IS NOT NULL AND [ProductId] IS NOT NULL");
 
                     b.ToTable("Ratings");
                 });
@@ -828,13 +835,15 @@ namespace Opulenza.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Opulenza.Domain.Entities.Ratings.Rating", null)
-                        .WithMany()
+                    b.HasOne("Opulenza.Domain.Entities.Users.ApplicationUser", "User")
+                        .WithMany("Ratings")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Shipments.Shipment", b =>
@@ -915,6 +924,8 @@ namespace Opulenza.Infrastructure.Migrations
                     b.Navigation("Cart");
 
                     b.Navigation("Image");
+
+                    b.Navigation("Ratings");
 
                     b.Navigation("WishListItems");
                 });

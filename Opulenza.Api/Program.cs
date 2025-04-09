@@ -1,7 +1,10 @@
 using Opulenza.Api;
+using Opulenza.Infrastructure.Common.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("seeder.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddPresentation(builder.Configuration);
 
@@ -11,11 +14,11 @@ builder.Host.UseSerilog();
 var app = builder.Build();
 
 // #region SeedData
-// using (var scope = app.Services.CreateScope())
-// {
-//     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-//     context.Database.EnsureCreated();
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    context.Database.EnsureCreated();
+}
 
 //Configure the HTTP request pipeline.
 

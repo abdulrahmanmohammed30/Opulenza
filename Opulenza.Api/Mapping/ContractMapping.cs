@@ -1,13 +1,17 @@
-﻿using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
+﻿using Opulenza.Application.Features.Authentication.Commands.LoginWithGitHubCallback;
+using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
 using Opulenza.Application.Features.Authentication.Commands.RequestResetPassword;
 using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
-using Opulenza.Application.Features.Authentication.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Queries.Login;
+using Opulenza.Application.Features.Common;
 using Opulenza.Application.Features.Products.Commands.AddProduct;
+using Opulenza.Application.Features.Products.Commands.AddProductImages;
 using Opulenza.Application.Features.Products.Commands.DeleteProduct;
 using Opulenza.Application.Features.Products.Commands.UpdateProduct;
-using Opulenza.Application.Features.Products.Queries.Common;
+using Opulenza.Application.Features.Products.Common;
+using Opulenza.Application.Features.Products.Queries.GetProductImages;
 using Opulenza.Application.Features.Products.Queries.GetProducts;
+using Opulenza.Application.Features.Ratings.Queries.GetRatings;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
@@ -15,6 +19,7 @@ using Opulenza.Application.Features.Users.Commands.UploadImage;
 using Opulenza.Application.Features.Users.Queries.GetUser;
 using Opulenza.Contracts.Auth;
 using Opulenza.Contracts.Products;
+using Opulenza.Contracts.Ratings;
 using Opulenza.Contracts.Users;
 using LoginRequest = Opulenza.Contracts.Auth.LoginRequest;
 using RegisterRequest = Opulenza.Contracts.Auth.RegisterRequest;
@@ -137,7 +142,7 @@ public static class ContractMapping
     }
 
     public static ResetPasswordCommand MapToResetPasswordCommand(
-        this Opulenza.Contracts.Auth.ResetPasswordRequest resetPasswordRequest)
+        this ResetPasswordRequest resetPasswordRequest)
     {
         return new ResetPasswordCommand()
         {
@@ -228,7 +233,7 @@ public static class ContractMapping
         if (string.IsNullOrWhiteSpace(sort))
             return SortBy.None;
 
-        if (Enum.TryParse(typeof(SortBy),  sort.AsSpan(1), true, out var sortBy) == false)
+        if (Enum.TryParse(typeof(SortBy), sort.AsSpan(1), true, out var sortBy) == false)
             return SortBy.None;
 
         return (SortBy)sortBy;
@@ -238,8 +243,8 @@ public static class ContractMapping
     {
         return new GetProductsQuery()
         {
-            PageNumber = request.PageNumber,
-            PageSize = request.PageSize,
+            PageNumber = request.Page,
+            PageSize = request.Size,
             MinPrice = request.MinPrice,
             MaxPrice = request.MaxPrice,
             IsAvailable = request.IsAvailable,
@@ -274,8 +279,8 @@ public static class ContractMapping
             TotalCount = getProductListResult.TotalCount,
         };
     }
-    
-    public static UpdateProductCommand MapToUpdateProductRequest (this UpdateProductRequest updateProductRequest)
+
+    public static UpdateProductCommand MapToUpdateProductRequest(this UpdateProductRequest updateProductRequest)
     {
         return new UpdateProductCommand()
         {
@@ -297,6 +302,62 @@ public static class ContractMapping
         return new DeleteProductCommand()
         {
             ProductId = deleteProductRequest.ProductId,
+        };
+    }
+
+    public static AddProductImagesCommand MapToAddProductImagesCommand(
+        this AddProductImagesRequest addProductImagesRequest)
+    {
+        return new AddProductImagesCommand()
+        {
+            Files = addProductImagesRequest.Files
+        };
+    }
+
+    public static ProductImagesResponse MapToImageResponse(this ProductImagesResult productImageResult)
+    {
+        return new ProductImagesResponse()
+        {
+            ProductId = productImageResult.ProductId,
+            Images = productImageResult.Images.Select(image => new ImageResponse()
+            {
+                Id = image.Id,
+                FilePath = image.FilePath,
+                IsFeaturedImage = image.IsFeaturedImage,
+            }).ToList(),
+            Warnings = productImageResult.Warnings
+        };
+    }
+
+    public static GetProductImagesResponse MapToGetProductImagesResponse(
+        this GetProductImagesResult productImagesResult)
+    {
+        return new GetProductImagesResponse()
+        {
+            Images = productImagesResult.Images.Select(image => new ImageResponse()
+            {
+                Id = image.Id,
+                FilePath = image.FilePath,
+                IsFeaturedImage = image.IsFeaturedImage,
+            }).ToList(),
+        };
+    }
+
+    public static GetRatingsResponse MapToGetRatingsResponse(this GetRatingsResult getRatingsResult)
+    {
+        return new GetRatingsResponse()
+        {
+            Ratings = getRatingsResult.Ratings.Select(r => new GetRatingResponse()
+            {
+                Id = r.Id,
+                Value = r.Value,
+                UserId = r.UserId,
+                Username = r.Username,
+                ReviewText = r.ReviewText,
+                CreatedAt = r.CreatedAt,
+                UserProfileUrl = r.UserProfileUrl,
+            }).ToList(),
+            TotalCount = getRatingsResult.TotalCount,
         };
     }
 }

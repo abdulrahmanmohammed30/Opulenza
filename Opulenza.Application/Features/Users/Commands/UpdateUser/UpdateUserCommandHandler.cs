@@ -2,23 +2,25 @@
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
-using Opulenza.Application.Features.Users.Commands.Update;
+using Opulenza.Application.Common.interfaces;
 using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Application.Features.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandHandler(
     UserManager<ApplicationUser> userManager,
-    ILogger<UpdateUserCommandHandler> logger)
+    ILogger<UpdateUserCommandHandler> logger, 
+    ICurrentUserProvider currentUserProvider)
     : IRequestHandler<UpdateUserCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await userManager.FindByNameAsync(request.Username);
+        var username = currentUserProvider.GetCurrentUser().Username;
+        var user = await userManager.FindByNameAsync(username);
 
         if (user == null)
         {
-            logger.LogWarning("User with username {Username} not found", request.Username);
+            logger.LogWarning("User with username {Username} not found", username);
             return Error.Unauthorized();
         }
 
@@ -39,7 +41,7 @@ public class UpdateUserCommandHandler(
             if (identityResult.Succeeded == false)
             {
                 logger.LogWarning("User update failed for user with username {Username} and Errors: {Errors}",
-                    request.Username, identityResult.Errors);
+                    username, identityResult.Errors);
                 return Error.Failure(code: "UserUpdateFailed", description: "User update failed");
             }
         }

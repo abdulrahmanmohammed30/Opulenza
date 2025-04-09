@@ -1,0 +1,186 @@
+﻿{
+  "Seeder": {
+    "Products": [
+      {
+        "Name": "Apple iPhone 15 Pro",
+        "Description": "Apple iPhone 15 Pro with A17 Pro chip and 6.1-inch display.",
+        "Slug": "apple-iphone-15-pro",
+        "Price": 999.99,
+        "DiscountPrice": 949.99,
+        "Tax": 99.99,
+        "TaxIncluded": false,
+        "Brand": "Apple",
+        "StockQuantity": 25,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Samsung Galaxy S23 Ultra",
+        "Description": "Samsung Galaxy S23 Ultra with 200MP camera and S Pen support.",
+        "Slug": "samsung-galaxy-s23-ultra",
+        "Price": 1199.99,
+        "DiscountPrice": 1099.99,
+        "Tax": 109.99,
+        "TaxIncluded": true,
+        "Brand": "Samsung",
+        "StockQuantity": 10,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Sony WH-1000XM5 Headphones",
+        "Description": "Sony's premium noise-canceling wireless headphones with up to 30 hours of battery life.",
+        "Slug": "sony-wh-1000xm5-headphones",
+        "Price": 399.99,
+        "DiscountPrice": null,
+        "Tax": 39.99,
+        "TaxIncluded": false,
+        "Brand": "Sony",
+        "StockQuantity": 50,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Dell XPS 15 Laptop",
+        "Description": "Dell XPS 15 with 13th Gen Intel Core i7 and NVIDIA RTX 4060.",
+        "Slug": "dell-xps-15-laptop",
+        "Price": 1799.99,
+        "DiscountPrice": 1699.99,
+        "Tax": 159.99,
+        "TaxIncluded": false,
+        "Brand": "Dell",
+        "StockQuantity": 5,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Apple MacBook Air M2",
+        "Description": "Apple MacBook Air with M2 chip, 13.6-inch Liquid Retina display, and 18-hour battery life.",
+        "Slug": "apple-macbook-air-m2",
+        "Price": 1299.99,
+        "DiscountPrice": 1249.99,
+        "Tax": 119.99,
+        "TaxIncluded": true,
+        "Brand": "Apple",
+        "StockQuantity": 12,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Bose SoundLink Revolve+",
+        "Description": "Portable Bluetooth speaker with 360-degree sound and water-resistant design.",
+        "Slug": "bose-soundlink-revolve-plus",
+        "Price": 299.99,
+        "DiscountPrice": 249.99,
+        "Tax": 24.99,
+        "TaxIncluded": false,
+        "Brand": "Bose",
+        "StockQuantity": 20,
+        "IsAvailable": true
+      },
+      {
+        "Name": "LG C3 55-inch OLED TV",
+        "Description": "LG 55-inch OLED Smart TV with 4K resolution and Dolby Vision support.",
+        "Slug": "lg-c3-55-inch-oled-tv",
+        "Price": 1599.99,
+        "DiscountPrice": 1499.99,
+        "Tax": 139.99,
+        "TaxIncluded": true,
+        "Brand": "LG",
+        "StockQuantity": 8,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Nintendo Switch OLED",
+        "Description": "Nintendo Switch OLED model with 7-inch display and improved speakers.",
+        "Slug": "nintendo-switch-oled",
+        "Price": 349.99,
+        "DiscountPrice": null,
+        "Tax": 29.99,
+        "TaxIncluded": false,
+        "Brand": "Nintendo",
+        "StockQuantity": 30,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Canon EOS R6 Mirrorless Camera",
+        "Description": "Canon EOS R6 with 20MP full-frame sensor and 4K video recording.",
+        "Slug": "canon-eos-r6-mirrorless-camera",
+        "Price": 2499.99,
+        "DiscountPrice": 2399.99,
+        "Tax": 199.99,
+        "TaxIncluded": false,
+        "Brand": "Canon",
+        "StockQuantity": 6,
+        "IsAvailable": true
+      },
+      {
+        "Name": "GoPro HERO12 Black",
+        "Description": "GoPro HERO12 Black action camera with 5.3K video and waterproof design.",
+        "Slug": "gopro-hero12-black",
+        "Price": 499.99,
+        "DiscountPrice": null,
+        "Tax": 49.99,
+        "TaxIncluded": true,
+        "Brand": "GoPro",
+        "StockQuantity": 15,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Samsung 980 Pro 2TB SSD",
+        "Description": "Samsung 980 Pro PCIe Gen4 NVMe SSD with read speeds up to 7000MB/s.",
+        "Slug": "samsung-980-pro-2tb-ssd",
+        "Price": 249.99,
+        "DiscountPrice": 199.99,
+        "Tax": 19.99,
+        "TaxIncluded": false,
+        "Brand": "Samsung",
+        "StockQuantity": 40,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Apple AirPods Pro (2nd Gen)",
+        "Description": "Apple AirPods Pro with active noise cancellation and MagSafe charging case.",
+        "Slug": "apple-airpods-pro-2nd-gen",
+        "Price": 249.99,
+        "DiscountPrice": 219.99,
+        "Tax": 19.99,
+        "TaxIncluded": false,
+        "Brand": "Apple",
+        "StockQuantity": 35,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Razer DeathAdder V3 Pro",
+        "Description": "Razer wireless gaming mouse with ultra-lightweight design and optical switches.",
+        "Slug": "razer-deathadder-v3-pro",
+        "Price": 149.99,
+        "DiscountPrice": 129.99,
+        "Tax": 9.99,
+        "TaxIncluded": true,
+        "Brand": "Razer",
+        "StockQuantity": 18,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Anker PowerCore 26800mAh",
+        "Description": "Anker high-capacity power bank with dual USB ports and fast charging.",
+        "Slug": "anker-powercore-26800mah",
+        "Price": 79.99,
+        "DiscountPrice": 69.99,
+        "Tax": 6.99,
+        "TaxIncluded": false,
+        "Brand": "Anker",
+        "StockQuantity": 100,
+        "IsAvailable": true
+      },
+      {
+        "Name": "Google Nest Thermostat",
+        "Description": "Google Nest smart thermostat with energy-saving features and remote control.",
+        "Slug": "google-nest-thermostat",
+        "Price": 129.99,
+        "DiscountPrice": 119.99,
+        "Tax": 11.99,
+        "TaxIncluded": true,
+        "Brand": "Google",
+        "StockQuantity": 0,
+        "IsAvailable": false
+      }
+    ]
+  }
+}

@@ -5,16 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Users;
-using Opulenza.Infrastructure.Carts.Persistence;
-using Opulenza.Infrastructure.Categories.Persistence;
 using Opulenza.Infrastructure.Common.Persistence;
 using Opulenza.Infrastructure.Interceptors;
-using Opulenza.Infrastructure.Products.Persistence;
 using Opulenza.Infrastructure.Settings;
-using Opulenza.Infrastructure.Users.Persistence;
-using Opulenza.Infrastructure.Wishlists.Persistence;
+using Scrutor;
 
 namespace Opulenza.Infrastructure;
 
@@ -37,6 +34,10 @@ public static class DependencyInjection
                         };
 
                         context.Set<ApplicationRole>().AddRange(roles);
+
+                        var seeder = configuration.GetSection("Seeder").Get<Seeder>();
+                        context.Set<Product>().AddRange(seeder.Products);
+                        
                         context.SaveChanges();
                     }
                 }).UseAsyncSeeding(async (context, _, cancellationToken) =>
@@ -53,17 +54,8 @@ public static class DependencyInjection
                         await context.SaveChangesAsync(cancellationToken);
                     }
                 }));
-
-        services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-        services.AddScoped<ICartRepository, CartRepository>();
-        services.AddScoped<IWishlistRepository, WishlistRepository>();
+        
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
-        services.AddScoped(typeof(IUserSoftDeleteRepository<>), typeof(UserSoftDeleteRepository<>));
-        services.AddScoped(typeof(IOptionalSoftDeleteRepository<>), typeof(OptionalSoftDeleteRepository<>));
-        services.AddScoped<IUserAddressRepository, UserAddressRepository>();
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<ICategoryRepository, CategoryRepository>();
-        services.AddScoped(typeof(IProductSoftDeleteRepository<>), typeof(ProductSoftDeleteRepository<>));
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
@@ -86,8 +78,27 @@ public static class DependencyInjection
             .AddUserStore<UserStore<ApplicationUser, ApplicationRole, AppDbContext, int>>()
             .AddRoleStore<RoleStore<ApplicationRole, AppDbContext, int>>();
 
-        services.AddScoped<IUserImageRepository, UserImageRepository>();
-        
+        services.Scan(selector =>
+        {
+            selector.FromAssemblyOf<IMarker>()
+                .AddClasses(f => f.InNamespaces("Opulenza.Infrastructure"))
+                .UsingRegistrationStrategy(RegistrationStrategy.Throw)
+                .AsMatchingInterface()
+                .WithScopedLifetime();
+        });
+        // services.AddScoped<IUnitOfWork, UnitOfWork>();
+        // services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+        // services.AddScoped<ICartRepository, CartRepository>();
+        // services.AddScoped<IWishlistRepository, WishlistRepository>();
+        // services.AddScoped(typeof(IUserSoftDeleteRepository<>), typeof(UserSoftDeleteRepository<>));
+        // services.AddScoped(typeof(IOptionalSoftDeleteRepository<>), typeof(OptionalSoftDeleteRepository<>));
+        // services.AddScoped<IUserAddressRepository, UserAddressRepository>();
+        // services.AddScoped<IProductRepository, ProductRepository>();
+        // services.AddScoped<ICategoryRepository, CategoryRepository>();
+        // services.AddScoped(typeof(IProductSoftDeleteRepository<>), typeof(ProductSoftDeleteRepository<>));
+        // services.AddScoped<IUserImageRepository, UserImageRepository>();
+
+        services.Configure<Seeder>(configuration.GetSection("Seeder"));
         services.Configure<FileSettings>(configuration.GetSection("FileSettings"));
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
 

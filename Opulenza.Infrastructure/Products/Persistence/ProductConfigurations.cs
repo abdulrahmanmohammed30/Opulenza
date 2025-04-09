@@ -49,7 +49,7 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
         // A product can have many images 
         // If a product was deleted, all images related to that product will be deleted
         builder
-            .HasMany<ProductImage>(p => p.Images)
+            .HasMany(p => p.Images)
             .WithOne()
             .HasForeignKey(p=>p.ProductId)
             .OnDelete(DeleteBehavior.Cascade)
@@ -57,6 +57,7 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
         
         builder.HasMany(p => p.Categories)
             .WithMany(c => c.Products);
-        
+
+        builder.HasIndex(p => p.Slug).IsUnique();
     }
 }

@@ -44,5 +44,35 @@ public static class ApiEndpoints
         public const string AddProduct = $"{Base}";
         public const string UpdateProduct = $"{Base}/{{id}}";
         public const string DeleteProduct = $"{Base}/{{id}}";
+
+        public static class Images
+        {
+            private const string ImagesBase = $"{ApiBase}/products/{{id}}/images";
+            
+            public const string GetImages = $"{ImagesBase}";
+            public const string AddImages = $"{ImagesBase}";
+            public const string DeleteImage = $"{ImagesBase}/{{imageId}}";
+        }
+
+        public static class Ratings
+        {
+            private const string RatingsBase = $"{ApiBase}/products/{{id}}/ratings";
+            
+            public const string GetRatings = $"{RatingsBase}";
+            public const string AddRating = $"{RatingsBase}";
+            public const string UpdateRating = $"{RatingsBase}/{{ratingId}}";
+            public const string DeleteRating = $"{RatingsBase}/{{ratingId}}";
+            
+        }
+        
+        public static class Categories 
+        {
+            private const string CategoriesBase = $"{ApiBase}/products/{{id}}/categories";
+            
+            public const string GetCategories = $"{CategoriesBase}";
+            public const string AddCategory = $"{CategoriesBase}";
+            public const string DeleteCategory = $"{CategoriesBase}/{{categoryId}}";
+        }
+    
     }
 }

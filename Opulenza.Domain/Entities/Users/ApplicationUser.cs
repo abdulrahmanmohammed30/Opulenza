@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Opulenza.Domain.Entities.Carts;
+using Opulenza.Domain.Entities.Ratings;
 using Opulenza.Domain.Entities.Wishlists;
 
 namespace Opulenza.Domain.Entities.Users;
 
-public class ApplicationUser: IdentityUser<int>
+public class ApplicationUser: IdentityUser<int>, IEntity
 {
         public required string FirstName { get; set; }
         public required string LastName { get; set; }
@@ -26,4 +27,6 @@ public class ApplicationUser: IdentityUser<int>
         public DateTime CreatedAt { get; set; }
         
         public DateTime UpdatedAt { get; set; }
+        
+        public List<Rating>? Ratings { get; set; }
 }

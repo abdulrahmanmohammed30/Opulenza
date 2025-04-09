@@ -11,13 +11,13 @@
         <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
         <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
         <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="9.2.0" />
-        <PackageReference Include="Jab" Version="0.11.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Scrutor" Version="6.0.1" />
         <PackageReference Include="Serilog" Version="4.2.1-dev-02352" />
         <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
         <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
@@ -34,6 +34,10 @@
       <ProjectReference Include="..\Opulenza.Application\Opulenza.Application.csproj" />
       <ProjectReference Include="..\Opulenza.Contracts\Opulenza.Contracts.csproj" />
       <ProjectReference Include="..\Opulenza.Infrastructure\Opulenza.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="seeder.json" />
     </ItemGroup>
 
 </Project>

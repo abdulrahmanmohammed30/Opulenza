@@ -6,25 +6,25 @@ namespace Opulenza.Domain.Entities.Products;
 
 public class Product: BaseEntity
 {
-    public required string Name { get; init; }
+    public required string Name { get; set; }
     
-    public required string Description { get; init; } 
+    public required string Description { get; set; } 
 
-    public required string Slug { get; init; }
+    public required string Slug { get; set; }
     
-    public decimal Price { get; init; }
+    public decimal Price { get; set; }
 
-    public decimal? DiscountPrice { get; init; }
+    public decimal? DiscountPrice { get; set; }
 
-    public decimal Tax { get; init; }
+    public decimal Tax { get; set; }
 
-    public bool TaxIncluded { get; init; }
+    public bool TaxIncluded { get; set; }
  
-    public string? Brand { get; init; }
+    public string? Brand { get; set; }
 
-    public int? StockQuantity { get; init; }
+    public int? StockQuantity { get; set; }
 
-    public bool IsAvailable { get; init; }
+    public bool IsAvailable { get; set; }
 
     public List<ProductImage>? Images { get; set; }
 

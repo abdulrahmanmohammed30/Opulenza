@@ -25,8 +25,10 @@ public static class DependencyInjection
                 .AllowAnyMethod().AllowAnyHeader());
         });
         
+        
         services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
         services.AddScoped<IUrlGenerator, UrlGenerator>();
+        
         services.AddInfrastructure(configuration);
         services.AddApplication(configuration);
 
@@ -78,9 +80,6 @@ public static class DependencyInjection
                 }
             });
         });
-        
-        services.AddScoped<IUploadFileService, UploadFileService>();
-        services.AddScoped<IEmailService, EmailService>();
         
         Serilog.ILogger logger = new LoggerConfiguration()
             .Enrich.FromLogContext()

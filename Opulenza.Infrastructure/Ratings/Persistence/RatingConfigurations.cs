@@ -6,7 +6,7 @@ using Opulenza.Domain.Entities.Users;
 
 namespace Opulenza.Infrastructure.Ratings.Persistence;
 
-public class RatingConfigurations:IEntityTypeConfiguration<Rating>
+public class RatingConfigurations : IEntityTypeConfiguration<Rating>
 {
     public void Configure(EntityTypeBuilder<Rating> builder)
     {
@@ -16,7 +16,7 @@ public class RatingConfigurations:IEntityTypeConfiguration<Rating>
         //
         // builder
         //     .HasKey(u => u.Id);
-        
+
         builder
             .Property(u => u.Value)
             .IsRequired();
@@ -25,15 +25,29 @@ public class RatingConfigurations:IEntityTypeConfiguration<Rating>
             .Property(u => u.ReviewText)
             .HasColumnType("nvarchar(max)")
             .IsRequired(false);
-        
+
         builder
             .Property(u => u.UserId)
             .IsRequired();
-        
-        builder.HasOne<Rating>()
-            .WithMany()
-            .HasForeignKey(r=>r.UserId)
+
+        builder.Property(u => u.ProductId)
+            .IsRequired();
+
+        builder.HasOne(r => r.User)
+            .WithMany(user=>user.Ratings)
+            .HasForeignKey(r => r.UserId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(r => r.Product)
+            .WithMany(p=>p.Ratings)
+            .HasForeignKey(r => r.ProductId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+        
+        builder
+            .HasIndex(r => new { r.UserId, r.ProductId })
+            .IsUnique()
+            .HasDatabaseName("IX_User_Product");
     }
 }

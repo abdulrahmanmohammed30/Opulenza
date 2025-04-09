@@ -13,6 +13,7 @@
 
     <ItemGroup>
         <Folder Include="Features\Authorization\" />
+        <Folder Include="Features\Ratings\Commands\" />
     </ItemGroup>
 
     <ItemGroup>
@@ -24,6 +25,7 @@
         <PackageReference Include="MediatR" Version="12.4.1"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.0"/>
+        <PackageReference Include="Scrutor" Version="6.0.1" />
         <PackageReference Include="Serilog" Version="4.2.1-dev-02352" />
     </ItemGroup>
 </Project>

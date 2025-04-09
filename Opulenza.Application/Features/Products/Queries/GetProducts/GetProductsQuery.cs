@@ -1,5 +1,6 @@
 ﻿using ErrorOr;
 using MediatR;
+using Opulenza.Application.Features.Common;
 
 namespace Opulenza.Application.Features.Products.Queries.GetProducts;
 

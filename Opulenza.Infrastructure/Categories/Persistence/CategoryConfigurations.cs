@@ -44,5 +44,7 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
             .WithOne()
             .HasForeignKey(i => i.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
+        
+        builder.HasIndex(c=>c.Slug).IsUnique();
     }
 }

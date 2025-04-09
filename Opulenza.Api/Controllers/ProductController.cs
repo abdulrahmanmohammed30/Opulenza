@@ -1,10 +1,13 @@
 ﻿using Asp.Versioning;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
+using Opulenza.Application.Features.Products.Commands.AddProductImages;
+using Opulenza.Application.Features.Products.Commands.DeleteProduct;
+using Opulenza.Application.Features.Products.Commands.DeleteProductImage;
 using Opulenza.Application.Features.Products.Queries.GetProductById;
 using Opulenza.Application.Features.Products.Queries.GetProductBySlug;
+using Opulenza.Application.Features.Products.Queries.GetProductImages;
 using Opulenza.Contracts.Products;
 
 namespace Opulenza.Api.Controllers;
@@ -12,7 +15,7 @@ namespace Opulenza.Api.Controllers;
 [ApiVersion("1.0")]
 public class ProductController(ISender mediator) : CustomController
 {
-    [Authorize(AuthConstants.AdminUserPolicyName)]
+    //[Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Products.AddProduct)]
     [ProducesResponseType(typeof(AddProductResponse), StatusCodes.Status201Created)]
@@ -91,9 +94,12 @@ public class ProductController(ISender mediator) : CustomController
 
     [HttpDelete]
     [Route(ApiEndpoints.Products.DeleteProduct)]
-    public async Task<IActionResult> DeleteProduct(DeleteProductRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
     {
-        var command = request.MapToDeleteProductCommand();
+        var command = new DeleteProductCommand()
+        {
+            ProductId = id
+        };
 
         var result = await mediator.Send(command, cancellationToken);
         
@@ -102,4 +108,54 @@ public class ProductController(ISender mediator) : CustomController
             Problem);
     }
 
+    [HttpPost]
+    [Route(ApiEndpoints.Products.Images.AddImages)]
+    [ProducesResponseType(typeof(ProductImagesResponse), StatusCodes.Status201Created)]
+    public async Task<IActionResult> AddProductImages(int id, AddProductImagesRequest request, CancellationToken cancellationToken)
+    {
+        var command = new AddProductImagesCommand()
+        {
+            ProductId = id, 
+            Files = request.Files
+        };
+
+        var result = await mediator.Send(command, cancellationToken);
+
+        return result.Match(
+            value => Ok(value.MapToImageResponse() ),
+            Problem);
+    }
+    
+    [HttpGet]
+    [Route(ApiEndpoints.Products.Images.GetImages)]
+    [ProducesResponseType(typeof(GetProductImagesResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductImages(int id, CancellationToken cancellationToken)
+    {
+        var query = new GetProductImagesQuery()
+        {
+            ProductId = id
+        };
+
+        var result = await mediator.Send(query, cancellationToken);
+
+        return result.Match(
+            value => Ok(value.MapToGetProductImagesResponse()),
+            Problem);
+    }
+
+    [HttpDelete]
+    [Route(ApiEndpoints.Products.Images.DeleteImage)]
+    public async Task<IActionResult> DeleteProductImage(int id, int imageId, CancellationToken cancellationToken)
+    {
+        var command = new DeleteProductImageCommand()
+        {
+            ProductId = id,
+            ImageId = imageId
+        };
+        
+        var result = await mediator.Send(command, cancellationToken);
+        return result.Match(
+            _ => NoContent(),
+            Problem);
+    }
 }

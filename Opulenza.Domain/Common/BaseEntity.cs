@@ -1,6 +1,6 @@
 ﻿namespace Opulenza.Domain.Common;
 
-public abstract class BaseEntity: ISoftDeletable
+public abstract class BaseEntity: ISoftDeletable, IEntity
 {
     public int Id { get; set; }
     public DateTime CreatedAt { get; set; }

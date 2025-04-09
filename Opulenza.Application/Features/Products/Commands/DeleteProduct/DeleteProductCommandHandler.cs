@@ -17,7 +17,7 @@ public class DeleteProductCommandHandler(
 {
     public async Task<ErrorOr<string>> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
-        var product = await productRepository.GetProductByIdAsync(request.ProductId, cancellationToken);
+        var product = await productRepository.GetProductByIdWithCategoriesAsync(request.ProductId, cancellationToken);
         if (product == null)
         {
             return Error.NotFound("Product not found");
