@@ -3,7 +3,16 @@ using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
 using Opulenza.Application.Features.Authentication.Commands.RequestResetPassword;
 using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
 using Opulenza.Application.Features.Authentication.Queries.Login;
+using Opulenza.Application.Features.Categories.Commands.AddCategory;
+using Opulenza.Application.Features.Categories.Commands.AddCategoryImages;
+using Opulenza.Application.Features.Categories.Commands.UpdateCategory;
+using Opulenza.Application.Features.Categories.Queries.GetCategories;
+using Opulenza.Application.Features.Categories.Queries.GetCategoryImages;
 using Opulenza.Application.Features.Common;
+using Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
+using Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
+using Opulenza.Application.Features.ProductCategories.Commands.UpdateProductCategories;
+using Opulenza.Application.Features.ProductCategories.Queries.GetProductCategories;
 using Opulenza.Application.Features.Products.Commands.AddProduct;
 using Opulenza.Application.Features.Products.Commands.AddProductImages;
 using Opulenza.Application.Features.Products.Commands.DeleteProduct;
@@ -11,6 +20,9 @@ using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 using Opulenza.Application.Features.Products.Common;
 using Opulenza.Application.Features.Products.Queries.GetProductImages;
 using Opulenza.Application.Features.Products.Queries.GetProducts;
+using Opulenza.Application.Features.Ratings.Commands.AddRating;
+using Opulenza.Application.Features.Ratings.Commands.DeleteRating;
+using Opulenza.Application.Features.Ratings.Commands.UpdateRating;
 using Opulenza.Application.Features.Ratings.Queries.GetRatings;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
@@ -18,9 +30,12 @@ using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
 using Opulenza.Application.Features.Users.Commands.UploadImage;
 using Opulenza.Application.Features.Users.Queries.GetUser;
 using Opulenza.Contracts.Auth;
+using Opulenza.Contracts.Categories;
+using Opulenza.Contracts.Common;
 using Opulenza.Contracts.Products;
 using Opulenza.Contracts.Ratings;
 using Opulenza.Contracts.Users;
+using GetCategoriesRequest = Opulenza.Contracts.Categories.GetCategoriesRequest;
 using LoginRequest = Opulenza.Contracts.Auth.LoginRequest;
 using RegisterRequest = Opulenza.Contracts.Auth.RegisterRequest;
 
@@ -358,6 +373,210 @@ public static class ContractMapping
                 UserProfileUrl = r.UserProfileUrl,
             }).ToList(),
             TotalCount = getRatingsResult.TotalCount,
+        };
+    }
+
+    public static GetCategoriesResponse MapToGetCategoriesResponse(this GetCategoriesResult getCategoriesResult)
+    {
+        return new GetCategoriesResponse()
+        {
+            Categories = getCategoriesResult.Categories.Select(c => new GetCategoryResponse()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Slug = c.Slug,
+                ParentId = c.ParentId,
+            }).ToList(),
+            TotalCount = getCategoriesResult.TotalCount,
+        };
+    }
+
+    /// <summary>
+    /// Maps a GetCategoriesRequest DTO to a GetCategoriesQuery.
+    /// </summary>
+    public static GetCategoriesQuery MapToGetCategoriesQuery(this GetCategoriesRequest request)
+    {
+        return new GetCategoriesQuery
+        {
+            PageNumber = request.Page,
+            PageSize = request.Size,
+            Search = request.Search,
+            Sort = request.Sort
+        };
+    }
+
+    /// <summary>
+    /// Maps an AddCategoryRequest DTO to an AddCategoryCommand.
+    /// </summary>
+    public static AddCategoryCommand MapToAddCategoryCommand(this AddCategoryRequest request)
+    {
+        return new AddCategoryCommand
+        {
+            Name = request.Name,
+            Description = request.Description,
+            ParentId = request.ParentId
+        };
+    }
+
+    /// <summary>
+    /// Maps an UpdateCategoryRequest DTO and a categoryId to an UpdateCategoryCommand.
+    /// </summary>
+    public static UpdateCategoryCommand MapToUpdateCategoryCommand(
+        this UpdateCategoryRequest request,
+        int categoryId)
+    {
+        return new UpdateCategoryCommand
+        {
+            Id = categoryId,
+            Name = request.Name,
+            Description = request.Description,
+            ParentId = request.ParentId
+        };
+    }
+
+    /// <summary>
+    /// Maps a GetRatingsRequest DTO and a product ID to a GetRatingsQuery.
+    /// </summary>
+    public static GetRatingsQuery MapToGetRatingsQuery(this GetRatingsRequest request, int productId)
+    {
+        return new GetRatingsQuery
+        {
+            ProductId = productId,
+            PageNumber = request.Page,
+            PageSize = request.Size,
+            Rating = request.Rating
+        };
+    }
+
+    /// <summary>
+    /// Maps an AddRatingRequest DTO and a product ID to an AddRatingCommand.
+    /// </summary>
+    public static AddRatingCommand MapToAddRatingCommand(this AddRatingRequest request, int productId)
+    {
+        return new AddRatingCommand
+        {
+            ProductId = productId,
+            Value = request.Value,
+            ReviewText = request.ReviewText
+        };
+    }
+
+    /// <summary>
+    /// Maps an UpdateRatingRequest DTO and its ratingId to an UpdateRatingCommand.
+    /// </summary>
+    public static UpdateRatingCommand MapToUpdateRatingCommand(this UpdateRatingRequest request, int ratingId)
+    {
+        return new UpdateRatingCommand
+        {
+            RatingId = ratingId,
+            Value = request.Value,
+            ReviewText = request.ReviewText
+        };
+    }
+
+    /// <summary>
+    /// Maps a ratingId (int) to a DeleteRatingCommand.
+    /// </summary>
+    public static DeleteRatingCommand MapToDeleteRatingCommand(this int ratingId)
+    {
+        return new DeleteRatingCommand
+        {
+            RatingId = ratingId
+        };
+    }
+
+    public static GetCategoryImagesResponse MapToGetCategoryImagesResponse(
+        this GetCategoryImagesResult productImagesResult)
+    {
+        return new GetCategoryImagesResponse()
+        {
+            Images = productImagesResult.Images.Select(image => new ImageResponse()
+            {
+                Id = image.Id,
+                FilePath = image.FilePath,
+                IsFeaturedImage = image.IsFeaturedImage,
+            }).ToList(),
+        };
+    }
+
+    public static CategoryImagesResponse MapToImageResponse(this CategoryImagesResult categoryImagesResult)
+    {
+        return new CategoryImagesResponse()
+        {
+            Images = categoryImagesResult.Images.Select(image => new ImageResponse()
+            {
+                Id = image.Id,
+                FilePath = image.FilePath,
+                IsFeaturedImage = image.IsFeaturedImage,
+            }).ToList(),
+            Warnings = categoryImagesResult.Warnings,
+            CategoryId = categoryImagesResult.CategoryId,
+        };
+    }
+
+    public static GetProductCategoriesResponse MapToGetProductCategoriesResponse(
+        this GetProductCategoriesResult getProductCategoriesRequest)
+    {
+        return new GetProductCategoriesResponse()
+        {
+            Categories = getProductCategoriesRequest.Categories.Select(c => new GetProductCategoryResponse()
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Description = c.Description,
+                Slug = c.Slug,
+                ParentId = c.ParentId,
+            }).ToList()
+        };
+    }
+    
+
+    /// <summary>
+    /// Maps the API request into an AddCategoriesToProductCommand.
+    /// </summary>
+    /// <param name="request">The incoming API add request.</param>
+    /// <param name="productId">The product id from the route.</param>
+    /// <returns>A populated command object.</returns>
+    public static AddCategoriesToProductCommand MapToAddCategoriesCommand(this AddCategoriesToProductRequest request,
+        int productId)
+    {
+        return new AddCategoriesToProductCommand
+        {
+            ProductId = productId,
+            Categories = request.Categories
+        };
+    }
+
+    /// <summary>
+    /// Maps the API request into an UpdateProductCategoriesCommand.
+    /// </summary>
+    /// <param name="request">The incoming API update request.</param>
+    /// <param name="productId">The product id from the route.</param>
+    /// <returns>A populated command object.</returns>
+    public static UpdateProductCategoriesCommand MapToUpdateCategoriesCommand(this UpdateProductCategoriesRequest request,
+        int productId)
+    {
+        return new UpdateProductCategoriesCommand
+        {
+            ProductId = productId,
+            Categories = request.Categories
+        };
+    }
+
+    /// <summary>
+    /// Maps the API request into a DeleteCategoriesFromProductCommand.
+    /// </summary>
+    /// <param name="request">The incoming API delete request (from query string).</param>
+    /// <param name="productId">The product id from the route.</param>
+    /// <returns>A populated command object.</returns>
+    public static DeleteCategoriesFromProductCommand MapToDeleteCategoriesCommand(
+        this DeleteCategoriesFromProductRequest request, int productId)
+    {
+        return new DeleteCategoriesFromProductCommand
+        {
+            ProductId = productId,
+            Categories = request.Categories
         };
     }
 }

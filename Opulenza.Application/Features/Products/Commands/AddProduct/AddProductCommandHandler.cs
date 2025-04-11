@@ -61,7 +61,7 @@ public class AddProductCommandHandler(
         // Add categories to the product 
         if (request.Categories != null)
         {
-            var categories = await categoryRepository.GetCategories(request.Categories);
+            var categories = await categoryRepository.GetCategoriesAsync(request.Categories);
 
             if (request.Categories.Count != categories.Count)
             {

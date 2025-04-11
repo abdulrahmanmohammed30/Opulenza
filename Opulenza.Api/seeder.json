@@ -181,6 +181,83 @@
         "StockQuantity": 0,
         "IsAvailable": false
       }
+    ],
+    "Categories": [
+      {
+        "Name": "Laptops",
+        "Description": "Portable computers for personal and professional use.",
+        "Slug": "laptops"
+      },
+      {
+        "Name": "Gaming Laptops",
+        "Description": "High-performance laptops designed for gaming.",
+        "Slug": "gaming-laptops"
+      },
+      {
+        "Name": "Ultrabooks",
+        "Description": "Thin, lightweight laptops with long battery life.",
+        "Slug": "ultrabooks"
+      },
+      {
+        "Name": "2-in-1 Laptops",
+        "Description": "Convertible laptops that function as both a laptop and a tablet.",
+        "Slug": "2-in-1-laptops"
+      },
+      {
+        "Name": "Laptop Accessories",
+        "Description": "Peripherals and add-ons for laptops.",
+        "Slug": "laptop-accessories"
+      },
+      {
+        "Name": "Laptop Chargers & Adapters",
+        "Description": "Power adapters and chargers for various laptop models.",
+        "Slug": "laptop-chargers-adapters"
+      },
+      {
+        "Name": "Laptop Batteries",
+        "Description": "Replacement batteries for laptops.",
+        "Slug": "laptop-batteries"
+      },
+      {
+        "Name": "Laptop Cooling Pads",
+        "Description": "Cooling solutions to prevent laptops from overheating.",
+        "Slug": "laptop-cooling-pads"
+      },
+      {
+        "Name": "Laptop Bags & Cases",
+        "Description": "Protective bags and cases for carrying laptops.",
+        "Slug": "laptop-bags-cases"
+      },
+      {
+        "Name": "External Hard Drives",
+        "Description": "Portable storage devices for laptops and desktops.",
+        "Slug": "external-hard-drives"
+      },
+      {
+        "Name": "Solid State Drives (SSD)",
+        "Description": "Fast and reliable storage solutions for laptops.",
+        "Slug": "solid-state-drives-ssd"
+      },
+      {
+        "Name": "Laptop RAM",
+        "Description": "Memory upgrades for better laptop performance.",
+        "Slug": "laptop-ram"
+      },
+      {
+        "Name": "Docking Stations",
+        "Description": "Devices that expand laptop connectivity options.",
+        "Slug": "docking-stations"
+      },
+      {
+        "Name": "Keyboards & Mice",
+        "Description": "External keyboards and mice for laptops.",
+        "Slug": "keyboards-mice"
+      },
+      {
+        "Name": "Monitors",
+        "Description": "External screens for laptops and desktops.",
+        "Slug": "monitors"
+      }
     ]
   }
 }

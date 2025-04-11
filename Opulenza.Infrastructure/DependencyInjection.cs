@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Users;
@@ -37,6 +38,7 @@ public static class DependencyInjection
 
                         var seeder = configuration.GetSection("Seeder").Get<Seeder>();
                         context.Set<Product>().AddRange(seeder.Products);
+                        context.Set<Category>().AddRange(seeder.Categories);
                         
                         context.SaveChanges();
                     }

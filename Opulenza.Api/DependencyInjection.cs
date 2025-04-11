@@ -1,13 +1,11 @@
-﻿using Asp.Versioning;
+﻿using System.Collections.Immutable;
+using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 using Opulenza.Api.Services;
 using Opulenza.Application;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Common.Utilities;
-using Opulenza.Application.ServiceContracts;
-using Opulenza.Application.Services;
 using Opulenza.Infrastructure;
-using Opulenza.Infrastructure.Services;
 using Serilog;
 
 namespace Opulenza.Api;
@@ -24,7 +22,11 @@ public static class DependencyInjection
             options.AddPolicy("default", p => p.AllowAnyOrigin()
                 .AllowAnyMethod().AllowAnyHeader());
         });
-        
+
+        services.AddResponseCaching(x =>
+        {
+            x.SizeLimit = 1024;
+        });
         
         services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
         services.AddScoped<IUrlGenerator, UrlGenerator>();

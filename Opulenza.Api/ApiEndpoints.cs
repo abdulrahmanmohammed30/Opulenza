@@ -70,9 +70,29 @@ public static class ApiEndpoints
             private const string CategoriesBase = $"{ApiBase}/products/{{id}}/categories";
             
             public const string GetCategories = $"{CategoriesBase}";
-            public const string AddCategory = $"{CategoriesBase}";
-            public const string DeleteCategory = $"{CategoriesBase}/{{categoryId}}";
+            public const string AddCategories = $"{CategoriesBase}";
+            public const string UpdateCategories = $"{CategoriesBase}";
+            public const string DeleteCategories = $"{CategoriesBase}";
         }
-    
+    }
+
+    public static class Categories
+    {// no circular dependency 
+        private const string Base = $"{ApiBase}/categories";
+        
+        public const string GetCategories = $"{Base}";
+        public const string AddCategory = $"{Base}";
+        public const string UpdateCategory = $"{Base}/{{id}}";
+        public const string DeleteCategory = $"{Base}/{{id}}";
+        
+        public static class Images
+        {
+            private const string ImagesBase = $"{ApiBase}/categories/{{id}}/images";
+            
+            public const string GetImages = $"{ImagesBase}";
+            public const string AddImages = $"{ImagesBase}";
+            public const string DeleteImage = $"{ImagesBase}/{{imageId}}";
+        }
+
     }
 }

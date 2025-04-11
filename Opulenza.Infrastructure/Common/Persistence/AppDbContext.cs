@@ -12,6 +12,7 @@ using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Shipments;
 using Opulenza.Domain.Entities.Users;
 using Opulenza.Domain.Entities.Wishlists;
+using Opulenza.Infrastructure.Categories.Persistence;
 
 namespace Opulenza.Infrastructure.Common.Persistence;
 
@@ -28,11 +29,13 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<Shipment> Shipments { get; set; }
     public DbSet<WishListItem> WishlistItems { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
+    public DbSet<CategoryRelationship> CategoryRelationships { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-
+        builder.Entity<CategoryRelationship>().HasNoKey().ToView(null);
+        
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
     }
 
@@ -40,7 +43,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     {
         await SaveChangesAsync(cancellationToken);
     }
-
+    
     public async Task ExecuteInTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default)
     {
         await using var transaction = await Database.BeginTransactionAsync(cancellationToken);

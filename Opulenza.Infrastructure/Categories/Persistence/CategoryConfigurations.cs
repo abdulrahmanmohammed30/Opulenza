@@ -22,7 +22,6 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
         builder.Property(c => c.Slug)
             .IsRequired()
             .HasMaxLength(250);
-        builder.HasIndex(c => c.Slug).IsUnique();
 
         builder.Property(c => c.CreatedAt)
             .IsRequired()
@@ -45,6 +44,7 @@ public class CategoryConfigurations : IEntityTypeConfiguration<Category>
             .HasForeignKey(i => i.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
         
+        builder.HasIndex(c => c.Name).IsUnique();
         builder.HasIndex(c=>c.Slug).IsUnique();
     }
 }

@@ -51,7 +51,7 @@ public class UpdateProductCommandHandler(
             // Categories to add: IDs present in the request but not already associated.
             var categoryIdsToAdd = request.Categories.Except(existingCategoryIds);
 
-            var categoriesToAdd = await categoryRepository.GetCategories(categoryIdsToAdd);
+            var categoriesToAdd = await categoryRepository.GetCategoriesAsync(categoryIdsToAdd);
 
             // Log missing categories if any.
             if (request.Categories.Count != categoriesToAdd.Count)

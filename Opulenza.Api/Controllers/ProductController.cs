@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
+using Opulenza.Application.Features.ProductCategories.Queries.GetProductCategories;
 using Opulenza.Application.Features.Products.Commands.AddProductImages;
 using Opulenza.Application.Features.Products.Commands.DeleteProduct;
 using Opulenza.Application.Features.Products.Commands.DeleteProductImage;
@@ -13,6 +14,7 @@ using Opulenza.Contracts.Products;
 namespace Opulenza.Api.Controllers;
 
 [ApiVersion("1.0")]
+[ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
 public class ProductController(ISender mediator) : CustomController
 {
     //[Authorize(AuthConstants.AdminUserPolicyName)]
@@ -66,6 +68,11 @@ public class ProductController(ISender mediator) : CustomController
 
     [HttpGet]
     [Route(ApiEndpoints.Products.GetProducts)]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any,
+        VaryByQueryKeys =
+        [
+            "Search", "Brand", "Category", "MinRating", "IsAvailable", "MinPrice", "MaxPrice", "DiscountOnly", "Sort"
+        ])]
     [ProducesResponseType(typeof(GetProductListResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProducts([FromQuery] GetProductsRequest request,
         CancellationToken cancellationToken)
@@ -86,7 +93,7 @@ public class ProductController(ISender mediator) : CustomController
         var command = request.MapToUpdateProductRequest();
 
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             _ => NoContent(),
             Problem);
@@ -102,7 +109,7 @@ public class ProductController(ISender mediator) : CustomController
         };
 
         var result = await mediator.Send(command, cancellationToken);
-        
+
         return result.Match(
             _ => NoContent(),
             Problem);
@@ -111,21 +118,22 @@ public class ProductController(ISender mediator) : CustomController
     [HttpPost]
     [Route(ApiEndpoints.Products.Images.AddImages)]
     [ProducesResponseType(typeof(ProductImagesResponse), StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddProductImages(int id, AddProductImagesRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddProductImages(int id, AddProductImagesRequest request,
+        CancellationToken cancellationToken)
     {
         var command = new AddProductImagesCommand()
         {
-            ProductId = id, 
+            ProductId = id,
             Files = request.Files
         };
 
         var result = await mediator.Send(command, cancellationToken);
 
         return result.Match(
-            value => Ok(value.MapToImageResponse() ),
+            value => Ok(value.MapToImageResponse()),
             Problem);
     }
-    
+
     [HttpGet]
     [Route(ApiEndpoints.Products.Images.GetImages)]
     [ProducesResponseType(typeof(GetProductImagesResponse), StatusCodes.Status200OK)]
@@ -152,10 +160,62 @@ public class ProductController(ISender mediator) : CustomController
             ProductId = id,
             ImageId = imageId
         };
-        
+
         var result = await mediator.Send(command, cancellationToken);
         return result.Match(
             _ => NoContent(),
             Problem);
+    }
+
+    [HttpGet]
+    [Route(ApiEndpoints.Products.Categories.GetCategories)]
+    [ProducesResponseType(typeof(GetProductCategoriesResponse), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProductCategories([FromRoute] int id,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetProductCategoriesQuery()
+        {
+            ProductId = id
+        };
+        var result = await mediator.Send(query, cancellationToken);
+        return result.Match(value => Ok(value.MapToGetProductCategoriesResponse()), Problem);
+    }
+
+    //[Authorize]
+    [HttpPost]
+    [Route(ApiEndpoints.Products.Categories.AddCategories)]
+    [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> AddCategoriesToProduct([FromRoute] int id,
+        [FromBody] AddCategoriesToProductRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = request.MapToAddCategoriesCommand(id);
+        var result = await mediator.Send(command, cancellationToken);
+        return result.Match(_ => NoContent(), Problem);
+    }
+
+    // [Authorize]
+    [HttpPut]
+    [Route(ApiEndpoints.Products.Categories.UpdateCategories)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateProductCategories([FromRoute] int id,
+        [FromBody] UpdateProductCategoriesRequest request, CancellationToken cancellationToken)
+    {
+        var command = request.MapToUpdateCategoriesCommand(id);
+        var result = await mediator.Send(command, cancellationToken);
+        return result.Match(_ => NoContent(), Problem);
+    }
+
+    // [Authorize]
+    [HttpDelete]
+    [Route(ApiEndpoints.Products.Categories.DeleteCategories)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteCategoriesFromProduct([FromRoute] int id,
+        [FromQuery] DeleteCategoriesFromProductRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = request.MapToDeleteCategoriesCommand(id);
+        var result = await mediator.Send(command, cancellationToken);
+        return result.Match(_ => NoContent(), Problem);
     }
 }

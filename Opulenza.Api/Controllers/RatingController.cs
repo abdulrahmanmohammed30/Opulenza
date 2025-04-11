@@ -3,10 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
-using Opulenza.Application.Features.Ratings.Commands.AddRating;
 using Opulenza.Application.Features.Ratings.Commands.DeleteRating;
-using Opulenza.Application.Features.Ratings.Commands.UpdateRating;
-using Opulenza.Application.Features.Ratings.Queries.GetRatings;
 using Opulenza.Contracts.Ratings;
 
 namespace Opulenza.Api.Controllers;
@@ -17,16 +14,11 @@ public class RatingController(ISender mediator): CustomController
     
     [HttpGet]
     [Route(ApiEndpoints.Products.Ratings.GetRatings)]
+    [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = ["Rating"])]
     [ProducesResponseType(typeof(GetRatingsResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetRatings([FromRoute] int id, [FromQuery] GetRatingsRequest request, CancellationToken cancellationToken)
     {
-        var query = new GetRatingsQuery()
-        {   
-            ProductId = id,
-            PageNumber = request.Page,
-            PageSize = request.Size,
-            Rating = request.Rating
-        };
+        var query = request.MapToGetRatingsQuery(id);
         var result = await mediator.Send(query, cancellationToken);
         return result.Match(value=>Ok(value.MapToGetRatingsResponse()), Problem);
     }
@@ -37,12 +29,7 @@ public class RatingController(ISender mediator): CustomController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> AddRating([FromRoute] int id, [FromBody] AddRatingRequest request, CancellationToken cancellationToken)
     {
-        var command = new AddRatingCommand()
-        {
-            ProductId = id,
-            Value = request.Value,
-            ReviewText = request.ReviewText
-        };
+        var command = request.MapToAddRatingCommand(id);
         var result = await mediator.Send(command, cancellationToken);
         return result.Match(_=>NoContent(), Problem);
     }
@@ -53,12 +40,7 @@ public class RatingController(ISender mediator): CustomController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateRating([FromRoute] int id, int ratingId, [FromBody] UpdateRatingRequest request, CancellationToken cancellationToken)
     {
-        var command = new UpdateRatingCommand()
-        {
-            RatingId = ratingId,
-            Value = request.Value,
-            ReviewText = request.ReviewText
-        };
+        var command = request.MapToUpdateRatingCommand(ratingId);
         var result = await mediator.Send(command, cancellationToken);
         return result.Match(_=>NoContent(), Problem);
     }

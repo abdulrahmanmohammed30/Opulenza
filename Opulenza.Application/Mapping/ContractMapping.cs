@@ -1,4 +1,5 @@
-﻿using Opulenza.Application.Features.Products.Commands.AddProduct;
+﻿using Opulenza.Application.Features.Categories.Queries.GetCategories;
+using Opulenza.Application.Features.Products.Commands.AddProduct;
 using Opulenza.Application.Features.Products.Commands.AddProductImages;
 using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 using Opulenza.Application.Features.Products.Common;
@@ -6,6 +7,7 @@ using Opulenza.Application.Features.Ratings.Queries.GetRatings;
 using Opulenza.Application.Features.Users.Commands.Create;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Queries.GetUser;
+using Opulenza.Domain.Entities.Categories;
 using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Ratings;
 using Opulenza.Domain.Entities.Users;
@@ -102,7 +104,9 @@ public static class ContractMapping
         dict["StockQuantity"] = updateProductCommand.StockQuantity?.ToString() ?? string.Empty;
 
         // Convert the list of categories to a comma-separated string.
-        dict["Categories"] = updateProductCommand.Categories != null ? string.Join(",", updateProductCommand.Categories) : string.Empty;
+        dict["Categories"] = updateProductCommand.Categories != null
+            ? string.Join(",", updateProductCommand.Categories)
+            : string.Empty;
 
         return dict;
     }
@@ -114,6 +118,18 @@ public static class ContractMapping
             Id = productImage.Id,
             FilePath = productImage.FilePath,
             IsFeaturedImage = productImage.IsFeaturedImage
+        };
+    }
+
+    public static GetCategoryResult MapToGetCategoryResult(this Category category)
+    {
+        return new GetCategoryResult()
+        {
+            Id = category.Id,
+            Name = category.Name,
+            Description = category.Description,
+            Slug = category.Slug,
+            ParentId = category.ParentId,
         };
     }
 }
