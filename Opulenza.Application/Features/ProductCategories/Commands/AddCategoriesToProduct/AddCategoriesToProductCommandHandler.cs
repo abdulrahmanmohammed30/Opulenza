@@ -2,14 +2,13 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
-using Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
 
-namespace Opulenza.Application.Features.ProductCategories.Commands.AddCategories;
+namespace Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
 
-public class AddCategoriesCommandHandler(
+public class AddCategoriesToProductCommandHandler(
     IProductRepository productRepository,
     ICategoryRepository categoryRepository,
-    ILogger<AddCategoriesCommandHandler> logger,
+    ILogger<AddCategoriesToProductCommandHandler> logger,
     IUnitOfWork unitOfWork) : IRequestHandler<AddCategoriesToProductCommand, ErrorOr<string>>
 {
     public async Task<ErrorOr<string>> Handle(AddCategoriesToProductCommand request, CancellationToken cancellationToken)

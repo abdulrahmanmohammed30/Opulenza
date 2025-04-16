@@ -26,31 +26,23 @@ public class UpdateCategoryCommandHandler(
 
         if (category.ParentId != request.ParentId)
         {
-            //  await categoryRepository.ExistsAsync(request.ParentId!.Value, cancellationToken) == false)
             var parentCategory = await categoryRepository.GetByIdAsync(request.ParentId!.Value, cancellationToken);
             if (parentCategory == null)
             {
-                return Error.NotFound("ParentCategoryNotFound", $"Parent category with id {request.ParentId} not found.");
+                return Error.NotFound("ParentCategoryNotFound",
+                    $"Parent category with id {request.ParentId} not found.");
             }
 
-            if (parentCategory.ParentId != null &&
-                await categoryRepository.HasAncestorCategory(parentCategory.ParentId.Value, category.Id,
-                    cancellationToken))
+            if (parentCategory.ParentId != null && (parentCategory.ParentId == category.Id ||
+                                                    await categoryRepository.HasAncestorCategory(
+                                                        parentCategory.ParentId.Value, category.Id,
+                                                        cancellationToken)))
             {
                 return Error.Conflict(
                     "CircularDependency",
                     "Circular dependency detected:  the parent category is a descendent of the specified category, which would create an invalid cycle."
                 );
             }
-            if (parentCategory.ParentId == category.Id)
-            {
-                return Error.Conflict(
-                    "CircularDependency",
-                    "Circular dependency detected: the parent category is already a child of the specified category, which would create an invalid cycle."
-                );
-            }
-
-            return Error.NotFound("ParentCategoryNotFound", $"Parent category with id {request.ParentId} not found.");
         }
 
         category.Name = request.Name!;
@@ -64,7 +56,7 @@ public class UpdateCategoryCommandHandler(
 
         categoryRepository.Update(category);
         await unitOfWork.CommitChangesAsync(cancellationToken);
-        
+
         return "Category updated successfully.";
     }
 }

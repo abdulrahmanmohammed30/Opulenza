@@ -1,31 +1,30 @@
 ﻿using ErrorOr;
 using MediatR;
 using Opulenza.Application.Common.interfaces;
-using Opulenza.Application.Features.Products.Commands.DeleteProductImage;
-using Opulenza.Domain.Entities.Products;
+using Opulenza.Domain.Entities.Categories;
 
 namespace Opulenza.Application.Features.Categories.Commands.DeleteCategoryImage;
 
 public class DeleteCategoryImageCommandHandler(
     ICategoryRepository categoryRepository,
-    IRepository<ProductImage> categoryImageRepository, 
-    IUnitOfWork unitOfWork) : IRequestHandler<DeleteProductImageCommand, ErrorOr<string>>
+    IRepository<CategoryImage> categoryImageRepository, 
+    IUnitOfWork unitOfWork) : IRequestHandler<DeleteCategoryImageCommand, ErrorOr<string>>
 {
-    public async Task<ErrorOr<string>> Handle(DeleteProductImageCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<string>> Handle(DeleteCategoryImageCommand request, CancellationToken cancellationToken)
     {
-        var doesCategoryExist = await categoryRepository.ExistsAsync(request.ProductId, cancellationToken);
-
+        var doesCategoryExist = await categoryRepository.ExistsAsync(request.CategoryId, cancellationToken);
         if (!doesCategoryExist)
         {
-            return Error.NotFound("CategoryNotFound", $"Category with id {request.ProductId} not found.");
+            return Error.NotFound("CategoryNotFound", $"Category with id {request.CategoryId} not found.");
         }
 
         var image = await categoryImageRepository.GetByIdAsync(request.ImageId, cancellationToken);
-        
         if (image == null)
         {
             return Error.NotFound("ImageNotFound", $"Image with id {request.ImageId} not found.");
         }
+
+        image.IsDeleted = true;
         
         categoryImageRepository.Update(image);
         await unitOfWork.CommitChangesAsync(cancellationToken);

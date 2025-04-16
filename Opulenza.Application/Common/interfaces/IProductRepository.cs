@@ -17,4 +17,8 @@ public interface IProductRepository : IRepository<Product>
     Task<bool> ExistsAsync(int productId, CancellationToken cancellationToken = default);
 
     Task<Product?> GetProductByIdWithCategoriesAsync(int id, CancellationToken cancellationToken);
+
+    Task<List<Product>> GetDatabaseProductsAsync(List<int> productIds, CancellationToken cancellationToken);
+
+    Task<List<Product>> GetTrackedDatabaseProductsAsync(List<string> productSlugs, CancellationToken cancellationToken);
 }

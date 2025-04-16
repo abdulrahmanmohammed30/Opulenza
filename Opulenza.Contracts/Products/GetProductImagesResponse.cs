@@ -1,4 +1,6 @@
-﻿namespace Opulenza.Contracts.Products;
+﻿using Opulenza.Contracts.Common;
+
+namespace Opulenza.Contracts.Products;
 
 public class GetProductImagesResponse
 {

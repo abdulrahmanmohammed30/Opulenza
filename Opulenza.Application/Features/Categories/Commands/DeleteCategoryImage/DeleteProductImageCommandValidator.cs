@@ -1,17 +1,17 @@
 ﻿using FluentValidation;
 
-namespace Opulenza.Application.Features.Products.Commands.DeleteProductImage;
+namespace Opulenza.Application.Features.Categories.Commands.DeleteCategoryImage;
 
-public class DeleteProductImageCommandValidator: AbstractValidator<DeleteProductImageCommand>
+public class DeleteCategoryImageCommandValidator: AbstractValidator<DeleteCategoryImageCommand>
 {
-    public DeleteProductImageCommandValidator()
+    public DeleteCategoryImageCommandValidator()
     {
-        RuleFor(x => x.ProductId)
-            .NotEmpty().WithMessage("Product Id is required.")
-            .GreaterThan(0).WithMessage("Product Id must be greater than 0.");
+        RuleFor(x => x.CategoryId)
+            .NotEmpty().WithMessage("Category Id is required.")
+            .GreaterThan(0).WithMessage("Category Id must be greater than 0.");
 
         RuleFor(x => x.ImageId)
             .NotEmpty().WithMessage("Image Id is required.")
-            .GreaterThan(0).WithMessage("Product Id must be greater than 0.");
+            .GreaterThan(0).WithMessage("Image Id must be greater than 0.");
     }
 }

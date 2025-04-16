@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Application.Features.Products.Common;
+﻿namespace Opulenza.Application.Features.Common;
 
 public class ImageResult
 {

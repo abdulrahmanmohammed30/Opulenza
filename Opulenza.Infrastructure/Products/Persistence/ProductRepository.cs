@@ -131,7 +131,8 @@ public class ProductRepository(AppDbContext context) : Repository<Product>(conte
             .FirstOrDefaultAsync(p => p.Slug == slug, cancellationToken);
     }
 
-    public async Task<GetProductListResult> GetProductsAsync(GetProductsQuery query, CancellationToken cancellationToken)
+    public async Task<GetProductListResult> GetProductsAsync(GetProductsQuery query,
+        CancellationToken cancellationToken)
     {
         var filteredProducts = context.Products.AsQueryable();
 
@@ -229,5 +230,18 @@ public class ProductRepository(AppDbContext context) : Repository<Product>(conte
     {
         return await context.Products.AnyAsync(p => p.Id == productId, cancellationToken);
     }
-    
+
+   public async Task<List<Product>> GetDatabaseProductsAsync(List<int> productIds, CancellationToken cancellationToken)
+    {
+       return await context.Products
+            .Where(p => productIds.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+    }
+   
+    public async Task<List<Product>> GetTrackedDatabaseProductsAsync(List<string> productSlugs, CancellationToken cancellationToken)
+    {
+        return await context.Products.AsTracking()
+            .Where(p => productSlugs.Contains(p.Slug))
+            .ToListAsync(cancellationToken);
+    }
 }

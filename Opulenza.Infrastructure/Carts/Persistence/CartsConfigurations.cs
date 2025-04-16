@@ -25,6 +25,7 @@ public class CartsConfigurations: IEntityTypeConfiguration<Cart>
         builder.HasMany(c => c.Items)
             .WithOne() 
             .HasForeignKey(ci => ci.CartId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<ApplicationUser>()

@@ -1,7 +1,6 @@
 ﻿namespace Opulenza.Contracts.Products;
 
-public class AddCategoriesRequest
+public class AddCategoriesToProductRequest
 {
-    public int? ProductId { get; set; }
     public List<int>? Categories { get; set; }
 }

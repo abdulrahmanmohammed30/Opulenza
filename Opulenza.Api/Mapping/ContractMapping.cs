@@ -3,12 +3,16 @@ using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
 using Opulenza.Application.Features.Authentication.Commands.RequestResetPassword;
 using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
 using Opulenza.Application.Features.Authentication.Queries.Login;
+using Opulenza.Application.Features.Carts.Commands.UpdateCart;
+using Opulenza.Application.Features.Carts.Queries.GetCart;
 using Opulenza.Application.Features.Categories.Commands.AddCategory;
 using Opulenza.Application.Features.Categories.Commands.AddCategoryImages;
 using Opulenza.Application.Features.Categories.Commands.UpdateCategory;
 using Opulenza.Application.Features.Categories.Queries.GetCategories;
 using Opulenza.Application.Features.Categories.Queries.GetCategoryImages;
 using Opulenza.Application.Features.Common;
+using Opulenza.Application.Features.Orders.Queries.GetOrder;
+using Opulenza.Application.Features.Orders.Queries.GetOrders;
 using Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
 using Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
 using Opulenza.Application.Features.ProductCategories.Commands.UpdateProductCategories;
@@ -29,12 +33,18 @@ using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
 using Opulenza.Application.Features.Users.Commands.UploadImage;
 using Opulenza.Application.Features.Users.Queries.GetUser;
+using Opulenza.Application.Features.Wishlist.Commands.AddToWishlist;
+using Opulenza.Application.Features.Wishlist.Commands.RemoveFromWishlist;
+using Opulenza.Application.Features.Wishlist.Queries.GetWishlist;
 using Opulenza.Contracts.Auth;
+using Opulenza.Contracts.Carts;
 using Opulenza.Contracts.Categories;
 using Opulenza.Contracts.Common;
+using Opulenza.Contracts.Orders;
 using Opulenza.Contracts.Products;
 using Opulenza.Contracts.Ratings;
 using Opulenza.Contracts.Users;
+using Opulenza.Contracts.Wishlist;
 using GetCategoriesRequest = Opulenza.Contracts.Categories.GetCategoriesRequest;
 using LoginRequest = Opulenza.Contracts.Auth.LoginRequest;
 using RegisterRequest = Opulenza.Contracts.Auth.RegisterRequest;
@@ -530,7 +540,7 @@ public static class ContractMapping
             }).ToList()
         };
     }
-    
+
 
     /// <summary>
     /// Maps the API request into an AddCategoriesToProductCommand.
@@ -554,7 +564,8 @@ public static class ContractMapping
     /// <param name="request">The incoming API update request.</param>
     /// <param name="productId">The product id from the route.</param>
     /// <returns>A populated command object.</returns>
-    public static UpdateProductCategoriesCommand MapToUpdateCategoriesCommand(this UpdateProductCategoriesRequest request,
+    public static UpdateProductCategoriesCommand MapToUpdateCategoriesCommand(
+        this UpdateProductCategoriesRequest request,
         int productId)
     {
         return new UpdateProductCategoriesCommand
@@ -577,6 +588,175 @@ public static class ContractMapping
         {
             ProductId = productId,
             Categories = request.Categories
+        };
+    }
+
+    public static UpdateCartCommand MapToUpdateUpdateCartCommand(this UpdateCartRequest request)
+    {
+        return new UpdateCartCommand
+        {
+            Items = request.Items.Select(MapToUpdateCartItemCommand).ToList()
+        };
+    }
+
+    public static UpdateCartRequest MapToUpdateCartRequest(this UpdateCartCommand command)
+    {
+        return new UpdateCartRequest
+        {
+            Items = command.Items.Select(MapToUpdateCartItemRequest).ToList()
+        };
+    }
+
+    private static UpdateCartItemCommand MapToUpdateCartItemCommand(this UpdateCartItemRequest request)
+    {
+        return new UpdateCartItemCommand
+        {
+            ProductId = request.ProductId,
+            Quantity = request.Quantity
+        };
+    }
+
+    private static UpdateCartItemRequest MapToUpdateCartItemRequest(this UpdateCartItemCommand command)
+    {
+        return new UpdateCartItemRequest
+        {
+            ProductId = command.ProductId,
+            Quantity = command.Quantity
+        };
+    }
+
+    public static GetCartResponse MapToGetCartResponse(this GetCartResult result)
+    {
+        return new GetCartResponse
+        {
+            Items = result.Items.Select(MapToGetCartItemResponse).ToList(),
+            TotalPrice = result.TotalPrice,
+            TotalPriceAfterDiscount = result.TotalPriceAfterDiscount
+        };
+    }
+
+    public static GetCartResult MapToResult(this GetCartResponse response)
+    {
+        return new GetCartResult
+        {
+            Items = response.Items.Select(MapToGetCartItemResult).ToList(),
+            TotalPrice = response.TotalPrice,
+            TotalPriceAfterDiscount = response.TotalPriceAfterDiscount
+        };
+    }
+
+    private static GetCartItemResponse MapToGetCartItemResponse(this GetCartItemResult result)
+    {
+        return new GetCartItemResponse
+        {
+            ProductId = result.ProductId,
+            Quantity = result.Quantity
+        };
+    }
+
+    private static GetCartItemResult MapToGetCartItemResult(this GetCartItemResponse response)
+    {
+        return new GetCartItemResult
+        {
+            ProductId = response.ProductId,
+            Quantity = response.Quantity
+        };
+    }
+
+    public static GetWishlistItemResponse MapToGetWishlistItemResponse(this GetWishlistItemResult result)
+    {
+        return new GetWishlistItemResponse
+        {
+            WishlistItemId = result.WishlistItemId,
+            Id = result.Id,
+            Name = result.Name,
+            Description = result.Description,
+            Slug = result.Slug,
+            Price = result.Price,
+            DiscountPrice = result.DiscountPrice,
+            Tax = result.Tax,
+            TaxIncluded = result.TaxIncluded,
+            Brand = result.Brand,
+            StockQuantity = result.StockQuantity,
+            IsAvailable = result.IsAvailable,
+        };
+    }
+
+    public static GetWishlistResponse MapToGetWishlistResponse(this GetWishlistResult result)
+    {
+        return new GetWishlistResponse
+        {
+            WishlistItems = result.WishlistItems
+                .Select(item => item.MapToGetWishlistItemResponse())
+                .ToList()
+        };
+    }
+
+    public static AddToWishlistCommand MapToAddToWishlistCommand(this AddToWishlistRequest request)
+    {
+        return new AddToWishlistCommand
+        {
+            ProductId = request.ProductId
+        };
+    }
+
+    public static RemoveFromWishlistCommand MapToRemoveFromWishlistCommand(this RemoveFromWishlistRequest request)
+    {
+        return new RemoveFromWishlistCommand
+        {
+            Id = request.Id
+        };
+    }
+
+    public static GetOrdersResponse MapToGetOrdersResponse(this GetOrdersResult getOrdersResult)
+    {
+        return new GetOrdersResponse()
+        {
+            Orders = getOrdersResult.Orders.Select(o => new GetSingleOrderResponse()
+            {
+                OrderStatus = o.OrderStatus.ToString(),
+                PaymentMethod = o.PaymentMethod?.ToString(),
+                PaymentStatus = o.PaymentStatus?.ToString(),
+                UserId = o.UserId,
+                OrderId = o.OrderId,
+                InvoiceUrl = o.InvoiceUrl,
+                PaymentId = o.PaymentId,
+                TotalAmount = o.TotalAmount
+            }).ToList()
+        };
+    }
+
+    public static GetOrdersQuery MapToGetOrdersQuery(this GetOrdersRequest request)
+    {
+        return new GetOrdersQuery()
+        {
+            PageNumber = request.Page,
+            PageSize = request.Size
+        };
+    }
+
+    public static GetOrderResponse MapToGetOrderResponse(this GetOrderResult getOrderResult)
+    {
+        
+        return new GetOrderResponse()
+        {
+            InvoiceUrl = getOrderResult?.InvoiceUrl,
+            OrderStatus = getOrderResult!.OrderStatus.ToString(),
+            UserId = getOrderResult?.UserId,
+            OrderId = getOrderResult!.OrderId,
+            PaymentId = getOrderResult?.PaymentId,
+            PaymentMethod = getOrderResult?.PaymentMethod.ToString(),
+            PaymentStatus = getOrderResult?.PaymentStatus.ToString(),
+            TotalAmount = getOrderResult!.TotalAmount,
+            Items = getOrderResult.Items.Select(x => new GetOrderItemResponse()
+            {
+                ProductId = x.ProductId,
+                Quantity = x.Quantity,
+                TaxIncluded = x.TaxIncluded,
+                Tax = x.Tax,
+                TotalPrice = x.TotalPrice,
+                UnitPrice = x.UnitPrice
+            }).ToList()
         };
     }
 }

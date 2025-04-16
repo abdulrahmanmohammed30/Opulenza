@@ -1,11 +1,10 @@
 ﻿using FluentValidation;
-using Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
 
-namespace Opulenza.Application.Features.ProductCategories.Commands.DeleteCategories;
+namespace Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
 
-public class DeleteCategoriesCommandValidator: AbstractValidator<DeleteCategoriesFromProductCommand>
+public class DeleteCategoriesFromCommandValidator: AbstractValidator<DeleteCategoriesFromProductCommand>
 {
-    public DeleteCategoriesCommandValidator()
+    public DeleteCategoriesFromCommandValidator()
     {
         RuleFor(x => x.ProductId)
             .NotEmpty().WithMessage("Product Id is required.")

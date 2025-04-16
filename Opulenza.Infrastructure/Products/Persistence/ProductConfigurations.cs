@@ -59,5 +59,15 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
             .WithMany(c => c.Products);
 
         builder.HasIndex(p => p.Slug).IsUnique();
+
+        builder.HasMany(p => p.ProductMetadata)
+            .WithOne(p => p.Product)
+            .HasForeignKey(p => p.ProductId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(p => p.PaymentServiceId)
+            .HasMaxLength(60)
+            .IsRequired();
     }
 }

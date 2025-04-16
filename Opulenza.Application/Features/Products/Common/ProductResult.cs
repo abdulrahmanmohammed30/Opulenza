@@ -1,4 +1,6 @@
-﻿namespace Opulenza.Application.Features.Products.Common;
+﻿using Opulenza.Application.Features.Common;
+
+namespace Opulenza.Application.Features.Products.Common;
 
 public class ProductResult
 {

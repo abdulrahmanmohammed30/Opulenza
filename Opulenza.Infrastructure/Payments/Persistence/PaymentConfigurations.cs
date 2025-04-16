@@ -30,12 +30,5 @@ public class PaymentConfigurations:IEntityTypeConfiguration<Payment>
 
         builder.Property(p => p.OrderId)
             .IsRequired();
-        
-        builder.HasOne<Order>()
-            .WithMany()
-            .HasForeignKey(s => s.OrderId)
-            .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
-
     }
 }

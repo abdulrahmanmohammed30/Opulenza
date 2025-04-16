@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Application.Features.Common;
 using Opulenza.Application.Features.Products.Common;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Products;

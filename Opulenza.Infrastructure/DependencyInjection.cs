@@ -6,13 +6,15 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Domain.Entities.Categories;
-using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Roles;
 using Opulenza.Domain.Entities.Users;
 using Opulenza.Infrastructure.Common.Persistence;
 using Opulenza.Infrastructure.Interceptors;
 using Opulenza.Infrastructure.Settings;
 using Scrutor;
+using StackExchange.Redis;
+using Stripe;
+using Product = Opulenza.Domain.Entities.Products.Product;
 
 namespace Opulenza.Infrastructure;
 
@@ -21,10 +23,11 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
-            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking).AddInterceptors(new SoftDeleteInterceptor())
+            options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+                .AddInterceptors(new SoftDeleteInterceptor())
                 .LogTo(Console.WriteLine, LogLevel.Critical)
                 .UseSqlServer(configuration.GetConnectionString("DefaultConnection"))
-                .UseSeeding( (context, _) =>
+                .UseSeeding((context, _) =>
                 {
                     if ((context.Set<ApplicationRole>().Any()) == false)
                     {
@@ -39,7 +42,7 @@ public static class DependencyInjection
                         var seeder = configuration.GetSection("Seeder").Get<Seeder>();
                         context.Set<Product>().AddRange(seeder.Products);
                         context.Set<Category>().AddRange(seeder.Categories);
-                        
+
                         context.SaveChanges();
                     }
                 }).UseAsyncSeeding(async (context, _, cancellationToken) =>
@@ -56,7 +59,7 @@ public static class DependencyInjection
                         await context.SaveChangesAsync(cancellationToken);
                     }
                 }));
-        
+
         services.AddScoped<IUnitOfWork>(serviceProvider => serviceProvider.GetRequiredService<AppDbContext>());
 
         services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -103,7 +106,22 @@ public static class DependencyInjection
         services.Configure<Seeder>(configuration.GetSection("Seeder"));
         services.Configure<FileSettings>(configuration.GetSection("FileSettings"));
         services.Configure<SmtpSettings>(configuration.GetSection("SmtpSettings"));
-
+        //
+        // services.AddStackExchangeRedisCache(options =>
+        // {
+        //     options.Configuration = configuration.GetConnectionString("Redis");
+        //     options.InstanceName="Opulenza";
+        // });
+        //
+        // Register the connection multiplexer as a singleton
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var redisConfiguration = configuration.GetConnectionString("Redis");
+            return ConnectionMultiplexer.Connect(redisConfiguration);
+        });
+        
+        StripeConfiguration.ApiKey=configuration["Stripe:SecretKey"];
+        
         return services;
     }
 }

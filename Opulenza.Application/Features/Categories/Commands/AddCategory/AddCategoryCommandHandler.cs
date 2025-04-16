@@ -13,7 +13,7 @@ public class AddCategoryCommandHandler(
 {
 
     public async Task<ErrorOr<int>> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
-    {
+    {    
         var category = new Category()
         {
             Name = request.Name!,

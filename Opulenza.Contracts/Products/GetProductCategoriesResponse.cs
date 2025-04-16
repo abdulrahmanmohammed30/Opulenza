@@ -1,6 +1,6 @@
 ﻿namespace Opulenza.Contracts.Products;
 
-public class GetCategoriesResponse
+public class GetProductCategoriesResponse
 {
     public List<GetProductCategoryResponse> Categories { get; init; } = new();
 }

@@ -6,4 +6,6 @@ public class CurrentUser
     public required string Username { get; init; }
     
     public required string Role { get; init; }
+    
+    public required string Email { get; set; }
 }

@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Contracts.Products
+﻿namespace Opulenza.Contracts.Common
 {
     public class ImageResponse
     {

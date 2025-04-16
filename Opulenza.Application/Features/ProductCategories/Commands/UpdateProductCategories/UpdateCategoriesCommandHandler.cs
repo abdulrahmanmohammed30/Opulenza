@@ -5,15 +5,15 @@ using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 using Opulenza.Domain.Entities.Categories;
 
-namespace Opulenza.Application.Features.ProductCategories.Commands.UpdateCategories;
+namespace Opulenza.Application.Features.ProductCategories.Commands.UpdateProductCategories;
 
-public class UpdateCategoriesCommandHandler(
+public class UpdateProductCategoriesCommandHandler(
     IProductRepository productRepository,
     ICategoryRepository categoryRepository,
     IUnitOfWork unitOfWork,
-    ILogger<UpdateProductCommand> logger) : IRequestHandler<UpdateCategoriesCommand, ErrorOr<string>>
+    ILogger<UpdateProductCommand> logger) : IRequestHandler<UpdateProductCategoriesCommand, ErrorOr<string>>
 {
-    public async Task<ErrorOr<string>> Handle(UpdateCategoriesCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<string>> Handle(UpdateProductCategoriesCommand request, CancellationToken cancellationToken)
     {
         // Retrieve the tracked product including its categories.
         var product = await productRepository.GetProductByIdWithCategoriesAsync(request.ProductId!.Value, cancellationToken);

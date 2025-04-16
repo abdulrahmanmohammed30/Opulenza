@@ -1,9 +1,9 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace Opulenza.Application.Features.ProductCategories.Commands.DeleteCategories;
+namespace Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
 
-public class DeleteCategoriesCommand: IRequest<ErrorOr<string>>
+public class DeleteCategoriesFromProductCommand: IRequest<ErrorOr<string>>
 {
     public int? ProductId { get; init; }
     public List<int>? Categories { get; init; }

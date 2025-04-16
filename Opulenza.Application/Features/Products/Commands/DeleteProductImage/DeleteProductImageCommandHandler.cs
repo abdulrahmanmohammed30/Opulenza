@@ -26,6 +26,7 @@ public class DeleteProductImageCommandHandler(
             return Error.NotFound("ImageNotFound", $"Image with id {request.ImageId} not found.");
         }
         
+        image.IsDeleted = true;
         productImageRepository.Update(image);
         await unitOfWork.CommitChangesAsync(cancellationToken);
         

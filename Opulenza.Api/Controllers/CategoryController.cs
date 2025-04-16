@@ -24,7 +24,7 @@ public class CategoryController(ISender mediator) : CustomController
         return result.Match(value => Ok(value.MapToGetCategoriesResponse()), Problem);
     }
 
-    //[Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Categories.AddCategory)]
     [ProducesResponseType(typeof(int), StatusCodes.Status201Created)]
@@ -37,7 +37,7 @@ public class CategoryController(ISender mediator) : CustomController
             new CreatedAtActionResult(nameof(GetCategories), "Category", null, value), Problem);
     }
 
-    // [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPut]
     [Route(ApiEndpoints.Categories.UpdateCategory)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -50,7 +50,7 @@ public class CategoryController(ISender mediator) : CustomController
         return result.Match(_ => NoContent(), Problem);
     }
 
-    // [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete]
     [Route(ApiEndpoints.Categories.DeleteCategory)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -66,7 +66,7 @@ public class CategoryController(ISender mediator) : CustomController
         return result.Match(_ => NoContent(), Problem);
     }
     
-    // [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Categories.Images.AddImages)]
     [ProducesResponseType(typeof(CategoryImagesResponse), StatusCodes.Status201Created)]
@@ -102,7 +102,7 @@ public class CategoryController(ISender mediator) : CustomController
             Problem);
     }
     
-// [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete]
     [Route(ApiEndpoints.Categories.Images.DeleteImage)]
     public async Task<IActionResult> DeleteCategoryImage(int id, int imageId, CancellationToken cancellationToken)

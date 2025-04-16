@@ -12,6 +12,6 @@ public class DeleteProductImageCommandValidator: AbstractValidator<DeleteProduct
 
         RuleFor(x => x.ImageId)
             .NotEmpty().WithMessage("Image Id is required.")
-            .GreaterThan(0).WithMessage("Product Id must be greater than 0.");
+            .GreaterThan(0).WithMessage("Image Id must be greater than 0.");
     }
 }

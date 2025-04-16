@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
+using Opulenza.Application.Features.Common;
 using Opulenza.Application.Features.Products.Common;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Categories;
@@ -20,7 +21,7 @@ public class AddCategoryImagesCommandHandler(
     public async Task<ErrorOr<CategoryImagesResult>> Handle(AddCategoryImagesCommand request,
         CancellationToken cancellationToken)
     {
-        var doesCategoryExist = await categoryRepository.ExistsAsync(request.CategoryId.Value, cancellationToken);
+        var doesCategoryExist = await categoryRepository.ExistsAsync(request.CategoryId!.Value, cancellationToken);
         var warnings = new List<string>();
 
         if (doesCategoryExist == false)
@@ -31,7 +32,7 @@ public class AddCategoryImagesCommandHandler(
 
         var directoryPath = $"Categories/{request.CategoryId}/images";
 
-        var categoryImagesList = await Task.WhenAll(request.Files.Select(async (file) =>
+        var categoryImagesList = await Task.WhenAll(request.Files!.Select(async (file) =>
         {
             try
             {

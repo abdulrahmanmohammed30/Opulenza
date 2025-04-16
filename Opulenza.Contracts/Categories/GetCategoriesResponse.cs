@@ -1,4 +1,4 @@
-﻿namespace Opulenza.Contracts.Common;
+﻿namespace Opulenza.Contracts.Categories;
 
 public class GetCategoriesResponse
 {

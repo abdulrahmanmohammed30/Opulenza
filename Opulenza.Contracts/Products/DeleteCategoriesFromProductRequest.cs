@@ -1,7 +1,6 @@
 ﻿namespace Opulenza.Contracts.Products;
 
-public class DeleteCategoriesRequest
+public class DeleteCategoriesFromProductRequest
 {
-    public int? ProductId { get; init; }
     public List<int>? Categories { get; init; }
 }

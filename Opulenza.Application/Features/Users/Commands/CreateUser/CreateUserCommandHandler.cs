@@ -22,10 +22,12 @@ public class CreateUserCommandHandler(
     IUnitOfWork unitOfWork,
     IEmailService emailService,
     IUrlGenerator urlGenerator,
+    IPaymentService paymentService,
     ILogger<CreateUserCommandHandler> logger) :
     IRequestHandler<CreateUserCommand, ErrorOr<string>>
 {
-    public async Task<ErrorOr<string>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<ErrorOr<string>> Handle(CreateUserCommand request,
+        CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request);
         
@@ -77,6 +79,7 @@ public class CreateUserCommandHandler(
         await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Role, "User"));
         await userManager.AddClaimAsync(user, new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
         await userManager.AddClaimAsync(user, new Claim("username", user.UserName));
+        await userManager.AddClaimAsync(user, new Claim(ClaimTypes.Email, user.Email));
 
         // create user cart 
         var cart = new Cart()
@@ -102,6 +105,16 @@ public class CreateUserCommandHandler(
             IsBodyHtml = true
         };
 
+        try
+        {
+            // create payment service customer 
+          await paymentService.CreateCustomer(user);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error creating payment service customer: {Message}", ex.Message);
+        }
+        
         await emailService.SendEmailAsync(email);
 
         return "User created successfully";

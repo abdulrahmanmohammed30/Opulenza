@@ -1,9 +1,9 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProductImages;
+namespace Opulenza.Application.Features.Categories.Queries.GetCategoryImages;
 
-public class GetProductImagesQuery: IRequest<ErrorOr<GetProductImagesResult>>
+public class GetCategoryImagesQuery: IRequest<ErrorOr<GetCategoryImagesResult>>
 {
-    public int? ProductId { get; set; }
+    public int? CategoryId { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Opulenza.Contracts.Products;
 
-public class GetCategoryResponse
+public class GetProductCategoryResponse
 {
     public int Id { get; set; }
     public required string Name { get; set; } 

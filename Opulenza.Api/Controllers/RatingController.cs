@@ -11,7 +11,8 @@ namespace Opulenza.Api.Controllers;
 [ApiVersion("1.0")]
 public class RatingController(ISender mediator): CustomController
 {
-    
+ 
+    [Authorize]
     [HttpGet]
     [Route(ApiEndpoints.Products.Ratings.GetRatings)]
     [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any, VaryByQueryKeys = ["Rating"])]

@@ -2,9 +2,9 @@
 
 namespace Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
 
-public class AddCategoriesCommandValidator: AbstractValidator<AddCategoriesToProductCommand>
+public class AddCategoriesToProductCommandValidator: AbstractValidator<AddCategoriesToProductCommand>
 {
-        public AddCategoriesCommandValidator()
+        public AddCategoriesToProductCommandValidator()
         {
                 RuleFor(x => x.ProductId)
                         .NotEmpty().WithMessage("Product Id is required.")

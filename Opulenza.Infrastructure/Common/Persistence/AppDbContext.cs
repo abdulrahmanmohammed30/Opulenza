@@ -9,6 +9,7 @@ using Opulenza.Domain.Entities.Payments;
 using Opulenza.Domain.Entities.Products;
 using Opulenza.Domain.Entities.Ratings;
 using Opulenza.Domain.Entities.Roles;
+using Opulenza.Domain.Entities.Sessions;
 using Opulenza.Domain.Entities.Shipments;
 using Opulenza.Domain.Entities.Users;
 using Opulenza.Domain.Entities.Wishlists;
@@ -30,6 +31,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options)
     public DbSet<WishListItem> WishlistItems { get; set; }
     public DbSet<OrderItem> OrderItems { get; set; }
     public DbSet<CategoryRelationship> CategoryRelationships { get; set; }
+    public DbSet<Session> Sessions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

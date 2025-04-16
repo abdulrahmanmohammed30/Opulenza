@@ -1,9 +1,9 @@
 ﻿using ErrorOr;
 using MediatR;
 
-namespace Opulenza.Application.Features.ProductCategories.Commands.AddCategories;
+namespace Opulenza.Application.Features.ProductCategories.Commands.AddCategoriesToProduct;
 
-public class AddCategoriesCommand: IRequest<ErrorOr<string>>
+public class AddCategoriesToProductCommand: IRequest<ErrorOr<string>>
 {
     public int? ProductId { get; set; }
     public List<int>? Categories { get; set; }

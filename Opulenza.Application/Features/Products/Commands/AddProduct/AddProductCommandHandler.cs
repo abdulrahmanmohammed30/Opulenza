@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Helpers;
+using Opulenza.Application.ServiceContracts;
 using Opulenza.Domain.Entities.Products;
 
 namespace Opulenza.Application.Features.Products.Commands.AddProduct;
@@ -11,6 +12,7 @@ public class AddProductCommandHandler(
     IProductRepository productRepository,
     ICategoryRepository categoryRepository,
     ILogger<AddProductCommandHandler> logger,
+    IPaymentService paymentService,
     IUnitOfWork unitOfWork)
     : IRequestHandler<AddProductCommand, ErrorOr<int>>
 {
@@ -54,14 +56,11 @@ public class AddProductCommandHandler(
             StockQuantity = request.StockQuantity,
             Slug = await GenerateUniqueSlugAsync(request.Name, cancellationToken)
         };
-
-        productRepository.Add(product);
-        await unitOfWork.CommitChangesAsync(cancellationToken);
-
+        
         // Add categories to the product 
         if (request.Categories != null)
         {
-            var categories = await categoryRepository.GetCategoriesAsync(request.Categories);
+            var categories = await categoryRepository.GetCategoriesAsync(request.Categories,cancellationToken);
 
             if (request.Categories.Count != categories.Count)
             {
@@ -72,9 +71,21 @@ public class AddProductCommandHandler(
             }
 
             product.Categories = categories;
-            productRepository.Update(product);
-            await unitOfWork.CommitChangesAsync(cancellationToken);
         }
+
+        string? paymentServiceId = null;
+        try
+        {
+            paymentServiceId = await paymentService.CreateProduct(product);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("Error creating payment service product: {Message}", ex.Message);
+        }
+        
+        product.PaymentServiceId=paymentServiceId;
+        productRepository.Add(product);
+        await unitOfWork.CommitChangesAsync(cancellationToken);
 
         return product.Id;
     }

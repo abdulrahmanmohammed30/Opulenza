@@ -23,7 +23,7 @@ public class InvoiceConfigurations: IEntityTypeConfiguration<Invoice>
             .IsRequired();
 
         builder.HasOne<Order>()
-            .WithOne()
+            .WithOne(o=>o.Invoice)
             .HasForeignKey<Invoice>(i=>i.OrderId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);

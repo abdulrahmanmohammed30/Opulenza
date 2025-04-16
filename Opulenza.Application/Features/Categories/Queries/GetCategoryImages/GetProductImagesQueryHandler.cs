@@ -3,25 +3,24 @@ using MediatR;
 using Opulenza.Application.Common.interfaces;
 using Opulenza.Application.Mapping;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProductImages;
+namespace Opulenza.Application.Features.Categories.Queries.GetCategoryImages;
 
-public class GetProductImagesQueryHandler(
-    IProductImageRepository productImageRepository,
-    IProductRepository productRepository) : IRequestHandler<GetProductImagesQuery, ErrorOr<GetProductImagesResult>>
+public class GetCategoryImagesQueryHandler(
+    ICategoryImageRepository categoryImageRepository,
+    ICategoryRepository categoryRepository) : IRequestHandler<GetCategoryImagesQuery, ErrorOr<GetCategoryImagesResult>>
 {
-    public async Task<ErrorOr<GetProductImagesResult>> Handle(GetProductImagesQuery request,
+    public async Task<ErrorOr<GetCategoryImagesResult>> Handle(GetCategoryImagesQuery request,
         CancellationToken cancellationToken)
     {
-        var doesProductExist = await productRepository.ExistsAsync(request.ProductId.Value, cancellationToken);
-
-        if (doesProductExist == false)
+        var doesCategoryExist = await categoryRepository.ExistsAsync(request.CategoryId!.Value, cancellationToken);
+        if (doesCategoryExist == false)
         {
-            return Error.NotFound("ProductNotFound", $"Product was id {request.ProductId} does not exist");
+            return Error.NotFound("CategoryNotFound", $"Category was id {request.CategoryId} does not exist");
         }
 
-        var images = await productImageRepository.GetImagesByProductId(request.ProductId.Value, cancellationToken);
+        var images = await categoryImageRepository.GetImagesByCategoryId(request.CategoryId.Value, cancellationToken);
 
-        return new GetProductImagesResult()
+        return new GetCategoryImagesResult()
         {
             Images = images.Select(x=>x.MapToImageResult()).ToList()
         };

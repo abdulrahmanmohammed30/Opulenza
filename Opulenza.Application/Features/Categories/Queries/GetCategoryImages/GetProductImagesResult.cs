@@ -1,8 +1,8 @@
-﻿using Opulenza.Application.Features.Products.Common;
+﻿using Opulenza.Application.Features.Common;
 
-namespace Opulenza.Application.Features.Products.Queries.GetProductImages;
+namespace Opulenza.Application.Features.Categories.Queries.GetCategoryImages;
 
-public class GetProductImagesResult
+public class GetCategoryImagesResult
 {
     public required List<ImageResult> Images { get; init; }
 

@@ -31,5 +31,9 @@ public class Product: BaseEntity
     public List<Rating>? Ratings { get; set; } 
 
     public List<Category>? Categories { get; set; }
+
+    public List<ProductMetadata>? ProductMetadata { get; set; }
     
+    public string? PaymentServiceId { get; set; }
+
 }

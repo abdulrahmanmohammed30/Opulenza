@@ -24,7 +24,7 @@ public class OrderConfigurations : IEntityTypeConfiguration<Order>
             .IsRequired();
         
         builder.Property(o => o.PaymentId)
-            .IsRequired();
+            .IsRequired(false);
 
         builder.HasMany(o => o.Items)
             .WithOne()
@@ -32,8 +32,8 @@ public class OrderConfigurations : IEntityTypeConfiguration<Order>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasOne<Payment>()
-            .WithOne()
+        builder.HasOne(o=>o.Payment)
+            .WithOne(p=>p.Order)
             .HasForeignKey<Payment>(p => p.OrderId)
             .IsRequired();
         

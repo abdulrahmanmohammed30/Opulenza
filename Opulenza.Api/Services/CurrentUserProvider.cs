@@ -16,12 +16,14 @@ public class CurrentUserProvider(IHttpContextAccessor httpContextAccessor) : ICu
         var username = httpContextAccessor.HttpContext.User.Identity.Name;
         var role = 
             httpContextAccessor.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Role).Value;
+        var email = httpContextAccessor.HttpContext.User.Claims.First(c=>c.Type == ClaimTypes.Email).Value;
         
         return new CurrentUser()
         {
              Id = int.Parse(userId),
              Username = username,
              Role = role,
+             Email = email
         };
     }
 }

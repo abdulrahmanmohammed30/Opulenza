@@ -1,6 +1,10 @@
-﻿namespace Opulenza.Application.Common.interfaces;
+﻿using Opulenza.Domain.Entities.Categories;
 
-public class ICategoryImageRepository
+namespace Opulenza.Application.Common.interfaces;
+
+public interface ICategoryImageRepository : IRepository<CategoryImage>
 {
-    
+    Task<List<CategoryImage>> GetImagesByCategoryId(int categoryId, CancellationToken cancellationToken);
+
+    void AddImages(IEnumerable<CategoryImage> categoryImages);
 }

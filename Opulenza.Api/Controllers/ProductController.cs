@@ -1,5 +1,6 @@
 ﻿using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
 using Opulenza.Application.Features.ProductCategories.Queries.GetProductCategories;
@@ -17,7 +18,7 @@ namespace Opulenza.Api.Controllers;
 [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
 public class ProductController(ISender mediator) : CustomController
 {
-    //[Authorize(AuthConstants.AdminUserPolicyName)]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Products.AddProduct)]
     [ProducesResponseType(typeof(AddProductResponse), StatusCodes.Status201Created)]
@@ -86,6 +87,7 @@ public class ProductController(ISender mediator) : CustomController
             Problem);
     }
 
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPut]
     [Route(ApiEndpoints.Products.UpdateProduct)]
     public async Task<IActionResult> UpdateProduct(UpdateProductRequest request, CancellationToken cancellationToken)
@@ -99,6 +101,7 @@ public class ProductController(ISender mediator) : CustomController
             Problem);
     }
 
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete]
     [Route(ApiEndpoints.Products.DeleteProduct)]
     public async Task<IActionResult> DeleteProduct(int id, CancellationToken cancellationToken)
@@ -115,6 +118,7 @@ public class ProductController(ISender mediator) : CustomController
             Problem);
     }
 
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Products.Images.AddImages)]
     [ProducesResponseType(typeof(ProductImagesResponse), StatusCodes.Status201Created)]
@@ -151,6 +155,7 @@ public class ProductController(ISender mediator) : CustomController
             Problem);
     }
 
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete]
     [Route(ApiEndpoints.Products.Images.DeleteImage)]
     public async Task<IActionResult> DeleteProductImage(int id, int imageId, CancellationToken cancellationToken)
@@ -181,7 +186,7 @@ public class ProductController(ISender mediator) : CustomController
         return result.Match(value => Ok(value.MapToGetProductCategoriesResponse()), Problem);
     }
 
-    //[Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPost]
     [Route(ApiEndpoints.Products.Categories.AddCategories)]
     [ProducesResponseType(typeof(int), StatusCodes.Status204NoContent)]
@@ -194,7 +199,7 @@ public class ProductController(ISender mediator) : CustomController
         return result.Match(_ => NoContent(), Problem);
     }
 
-    // [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpPut]
     [Route(ApiEndpoints.Products.Categories.UpdateCategories)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -206,7 +211,7 @@ public class ProductController(ISender mediator) : CustomController
         return result.Match(_ => NoContent(), Problem);
     }
 
-    // [Authorize]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpDelete]
     [Route(ApiEndpoints.Products.Categories.DeleteCategories)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

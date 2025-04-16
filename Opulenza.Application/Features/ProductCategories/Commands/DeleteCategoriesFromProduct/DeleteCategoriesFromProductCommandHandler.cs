@@ -6,7 +6,7 @@ using Opulenza.Application.Features.Products.Commands.UpdateProduct;
 
 namespace Opulenza.Application.Features.ProductCategories.Commands.DeleteCategoriesFromProduct;
 
-public class DeleteCategoriesCommandHandler(
+public class DeleteCategoriesFromProductCommandHandler(
     IProductRepository productRepository,
     IUnitOfWork unitOfWork,
     ILogger<UpdateProductCommand> logger) : IRequestHandler<DeleteCategoriesFromProductCommand, ErrorOr<string>>

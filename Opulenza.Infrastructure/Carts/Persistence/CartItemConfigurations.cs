@@ -27,9 +27,9 @@ public class CartItemConfigurations: IEntityTypeConfiguration<CartItem>
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.HasOne<Product>()
+        builder.HasOne<Product>(x=>x.Product)
             .WithMany()
-            .HasForeignKey(ci => ci.CartId)
+            .HasForeignKey(ci => ci.ProductId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
     }

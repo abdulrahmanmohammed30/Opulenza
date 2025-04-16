@@ -5,8 +5,8 @@ namespace Opulenza.Domain.Entities.Carts;
 public class Cart: BaseEntity, IUserOwned
 {
     public int UserId { get; set; }
-    
-    public List<CartItem>? Items { get; set; }
+
+    public List<CartItem> Items { get; set; } = new();
     
     public decimal TotalPrice { get; set; }
     
