@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
+using Opulenza.Application.Authentication;
 using Opulenza.Application.Features.Categories.Commands.AddCategoryImages;
 using Opulenza.Application.Features.Categories.Commands.DeleteCategory;
 using Opulenza.Application.Features.Categories.Commands.DeleteCategoryImage;

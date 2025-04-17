@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api.Mapping;
+using Opulenza.Application.Authentication;
 using Opulenza.Application.Features.Orders.Commands._FulfillCheckout;
 using Opulenza.Application.Features.Orders.Queries.GetOrder;
 using Opulenza.Application.ServiceContracts;
@@ -84,7 +85,7 @@ public class OrdersController(
         return NoContent();
     }
 
-    //[Authorize(AuthConstants.AdminUserPolicyName)]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpGet]
     [ProducesResponseType(typeof(GetOrdersResponse), StatusCodes.Status200OK)]
     [Route(ApiEndpoints.Orders.GetOrders)]
@@ -95,7 +96,7 @@ public class OrdersController(
         return result.Match(value => Ok(value.MapToGetOrdersResponse()), Problem);
     }
 
-    //[Authorize(AuthConstants.AdminUserPolicyName)]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
     [HttpGet]
     [ProducesResponseType(typeof(GetOrderResponse), StatusCodes.Status200OK)]
     [Route(ApiEndpoints.Orders.GetOrder)]

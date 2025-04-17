@@ -37,5 +37,8 @@ public class ApplicationUserConfigurations:IEntityTypeConfiguration<ApplicationU
         
         builder.Property(p => p.UpdatedAt)
             .HasDefaultValueSql("getdate()");
+
+        builder.Property(x => x.BlockedReason)
+            .HasMaxLength(600);
     }
 }

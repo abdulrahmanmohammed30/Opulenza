@@ -29,6 +29,10 @@ public static class ApiEndpoints
         public const string PublicImage = $"{Base}/image";
         public const string GetUserAddress = $"{Base}/address";
         public const string UpdateAddress = $"{Base}/address";
+
+        // Admin 
+        public const string GetUsers = $"{ApiBase}/users";
+        public const string BlockUser = $"users/block/{{id}}";
     }
 
     public static class Products
@@ -92,7 +96,7 @@ public static class ApiEndpoints
         public const string GetCart = $"{Base}";
         public const string UpdateCart = $"{Base}";
     }
-    
+
     public static class Wishlists
     {
         private const string Base = $"{ApiBase}/wishlists";
@@ -103,11 +107,11 @@ public static class ApiEndpoints
 
     public static class Orders
     {
-            private const string Base = $"{ApiBase}/orders";
-        
-            public const string GetOrders = $"{Base}";
-            public const string GetOrder = $"{Base}/{{id}}";
-            public const string Checkout = $"{Base}/checkout";
-            public const string Webhook = $"{Base}/webhook";
+        private const string Base = $"{ApiBase}/orders";
+
+        public const string GetOrders = $"{Base}";
+        public const string GetOrder = $"{Base}/{{id}}";
+        public const string Checkout = $"{Base}/checkout";
+        public const string Webhook = $"{Base}/webhook";
     }
 }

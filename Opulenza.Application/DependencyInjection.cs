@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using Opulenza.Api;
+using Opulenza.Application.Authentication;
 using Opulenza.Application.Behaviors;
 using Opulenza.Application.ServiceContracts;
 using Opulenza.Application.Services;

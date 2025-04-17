@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using Asp.Versioning;
+using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -33,7 +34,11 @@ public class AccountController(
     {
         var query = loginRequest.MapToLoginQuery();
         var result = await mediator.Send(query, cancellationToken);
-
+        if (result.IsError && result.Errors.FirstOrDefault().Type == ErrorType.Unauthorized)
+        {
+            return Unauthorized(result.Errors.FirstOrDefault().Description);
+        }
+        
         return result.Match(value => Ok(value.MapToLoginResponse()), Problem);
     }
 

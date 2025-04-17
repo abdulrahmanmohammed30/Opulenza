@@ -93,17 +93,19 @@ public class PaymentService(
         };
         var productService = new ProductService();
         var productStripeList = await productService.ListAsync(productListOptions);
-
-        var products = cart.Items.Select(x =>
+        var lineItems = new List<SessionLineItemOptions>();
+        foreach (var item in cart.Items)
         {
-            var product = productStripeList.Data.FirstOrDefault(p => p.Id == x.PaymentServiceId);
-            return new
+            var product = productStripeList.Data.FirstOrDefault(p => p.Id == item.PaymentServiceId);
+            if (product == null) return Error.Validation("CartItemCorrespondingProductNotFound",$"Product with ID '{item.PaymentServiceId}' not found.");
+            var lineItem = new SessionLineItemOptions()
             {
-                Id = product.Id,
-                DefaultPriceId = product.DefaultPriceId,
-                Quantity = x.Quantity,
+                Price = product.DefaultPriceId,
+                Quantity = item.Quantity
             };
-        }).ToList();
+
+            lineItems.Add(lineItem);
+        }
 
         var domain = "http://localhost:5279";
         var options = new SessionCreateOptions
@@ -114,11 +116,7 @@ public class PaymentService(
             SuccessUrl = domain + "/success.html",
             CancelUrl = domain + "/cancel.html",
             CustomerEmail = customer.Email,
-            LineItems = products.Select(p => new SessionLineItemOptions()
-            {
-                Price = p.DefaultPriceId,
-                Quantity = p.Quantity
-            }).ToList()
+            LineItems = lineItems
         };
         var service = new SessionService();
         var session = await service.CreateAsync(options);

@@ -1,4 +1,5 @@
-﻿using Opulenza.Application.Features.Authentication.Commands.LoginWithGitHubCallback;
+﻿using System.Runtime.Serialization.Json;
+using Opulenza.Application.Features.Authentication.Commands.LoginWithGitHubCallback;
 using Opulenza.Application.Features.Authentication.Commands.RefreshToken;
 using Opulenza.Application.Features.Authentication.Commands.RequestResetPassword;
 using Opulenza.Application.Features.Authentication.Commands.ResetPassword;
@@ -28,11 +29,13 @@ using Opulenza.Application.Features.Ratings.Commands.AddRating;
 using Opulenza.Application.Features.Ratings.Commands.DeleteRating;
 using Opulenza.Application.Features.Ratings.Commands.UpdateRating;
 using Opulenza.Application.Features.Ratings.Queries.GetRatings;
+using Opulenza.Application.Features.Users.Commands.BlockUser;
 using Opulenza.Application.Features.Users.Commands.ChangeUserPassword;
 using Opulenza.Application.Features.Users.Commands.CreateUser;
 using Opulenza.Application.Features.Users.Commands.UpdateUserAddress;
 using Opulenza.Application.Features.Users.Commands.UploadImage;
 using Opulenza.Application.Features.Users.Queries.GetUser;
+using Opulenza.Application.Features.Users.Queries.GetUsers;
 using Opulenza.Application.Features.Wishlist.Commands.AddToWishlist;
 using Opulenza.Application.Features.Wishlist.Commands.RemoveFromWishlist;
 using Opulenza.Application.Features.Wishlist.Queries.GetWishlist;
@@ -737,7 +740,6 @@ public static class ContractMapping
 
     public static GetOrderResponse MapToGetOrderResponse(this GetOrderResult getOrderResult)
     {
-        
         return new GetOrderResponse()
         {
             InvoiceUrl = getOrderResult?.InvoiceUrl,
@@ -757,6 +759,71 @@ public static class ContractMapping
                 TotalPrice = x.TotalPrice,
                 UnitPrice = x.UnitPrice
             }).ToList()
+        };
+    }
+
+    private static GetUsersSortBy GetUserSortBy(string? sort)
+    {
+        if (string.IsNullOrWhiteSpace(sort))
+            return GetUsersSortBy.None;
+
+        if (Enum.TryParse(typeof(SortBy), sort.AsSpan(1), true, out var sortBy) == false)
+            return GetUsersSortBy.None;
+
+        return (GetUsersSortBy)sortBy;
+    }
+
+    public static GetUsersQuery MapToGetUsersQuery(this GetUsersRequest request)
+    {
+        return new GetUsersQuery()
+        {
+            FirstName = request.FirstName,
+            LastName = request.LastName,
+            Username = request.Username,
+            Email = request.Email,
+            City = request.City,
+            Country = request.Country,
+            PageNumber = request.Page,
+            PageSize = request.Size,
+            Joined = request.Joined,
+            SortOptions = GetSortingOption(request.Sort),
+            SortBy = GetUserSortBy(request.Sort)
+        };
+    }
+
+    public static GetUsersResponse MapToGetUsersResponse(this GetUsersResult getUsersResult)
+    {
+        return new GetUsersResponse()
+        {
+            Users = getUsersResult.Users.Select(x => new GetUserResponse()
+            {
+                Email = x.Email,
+                Id = x.Id,
+                Joined = x.Joined,
+                Username = x.Username,
+                FirstName = x.FirstName,
+                LastName = x.LastName,
+                Address = x.Address == null
+                    ? null
+                    : new GetUserAddressResponse()
+                    {
+                        City = x.Address.City,
+                        Country = x.Address.Country,
+                        StreetAddress = x.Address.StreetAddress,
+                        ZipCode = x.Address.ZipCode
+                    }
+            }).ToList(),
+            TotalCount = getUsersResult.TotalCount
+        };
+    }
+
+    public static BlockUserCommand MapToBlockUserCommand(this BlockUserRequest blockUserRequest, int id)
+    {
+        return new BlockUserCommand()
+        {
+            UserId = id,
+            Reason = blockUserRequest.Reason,
+            BlockedUntil = blockUserRequest.BlockedUntil
         };
     }
 }

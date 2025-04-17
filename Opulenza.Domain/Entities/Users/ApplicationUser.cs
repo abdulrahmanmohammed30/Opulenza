@@ -29,4 +29,17 @@ public class ApplicationUser: IdentityUser<int>, IEntity
         public DateTime UpdatedAt { get; set; }
         
         public List<Rating>? Ratings { get; set; }
+        
+        
+        // BlockedAt BlockedUntil 
+        // BlockedAt is null  -> user is not blocked 
+        // BlockedAt is not null but BlockedUntil is null -> is is blocked permanently
+        // BlockedAt is not null & BlockedUntil is not null -> blocked for a particular period of time 
+        // Consequences? User won't be able to use the app if the user was blocked 
+        // When log in, return a message informing the frontend that the user is blocked 
+        public DateTime? BlockedAt { get; set; }
+        
+        public DateTime? BlockedUntil { get; set; }
+        
+        public string? BlockedReason { get; set; }
 }
