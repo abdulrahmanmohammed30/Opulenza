@@ -31,3 +31,8 @@ A robust e-commerce API for an online electronics store specializing in laptops 
   - A suite of modern .NET packages such as Asp.Versioning.Mvc, AspNet.Security.OAuth.GitHub, MailKit, MediatR, and Entity Framework Core – ensuring productivity and maintainability.
 
 Every endpoint—from `/api/auth/*` actions and cart management to product ratings and wishlist functionalities—has been meticulously crafted to offer a state-of-the-art backend solution.
+
+![image](https://github.com/user-attachments/assets/4c7e31a6-61ce-4fd3-a14a-7666d42b1043)
+![image](https://github.com/user-attachments/assets/85347d2b-7351-49f7-babe-85d4295de560)
+![image](https://github.com/user-attachments/assets/5b2c24e1-ef0f-4d0a-87fe-3a56b97d28cf)
+
