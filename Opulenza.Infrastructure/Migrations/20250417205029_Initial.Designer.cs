@@ -12,8 +12,8 @@ using Opulenza.Infrastructure.Common.Persistence;
 namespace Opulenza.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250415125732_dasdas")]
-    partial class dasdas
+    [Migration("20250417205029_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,6 +214,16 @@ namespace Opulenza.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("BlockedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BlockedReason")
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<DateTime?>("BlockedUntil")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -437,7 +447,7 @@ namespace Opulenza.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PaymentId")
+                    b.Property<int?>("PaymentId")
                         .HasColumnType("int");
 
                     b.Property<int?>("ShipmentId")
@@ -503,7 +513,9 @@ namespace Opulenza.Infrastructure.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("varchar");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderId")
+                        .IsUnique()
+                        .HasFilter("[OrderId] IS NOT NULL");
 
                     b.ToTable("Payments");
                 });
@@ -606,6 +618,18 @@ namespace Opulenza.Infrastructure.Migrations
                         .HasFilter("[UserId] IS NOT NULL AND [ProductId] IS NOT NULL");
 
                     b.ToTable("Ratings");
+                });
+
+            modelBuilder.Entity("Opulenza.Domain.Entities.Sessions.Session", b =>
+                {
+                    b.HasBaseType("Opulenza.Domain.Common.BaseEntity");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("nvarchar(300)");
+
+                    b.ToTable("Sessions");
                 });
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Shipments.Shipment", b =>
@@ -840,7 +864,7 @@ namespace Opulenza.Infrastructure.Migrations
             modelBuilder.Entity("Opulenza.Domain.Entities.Invoices.Invoice", b =>
                 {
                     b.HasOne("Opulenza.Domain.Entities.Orders.Order", null)
-                        .WithOne()
+                        .WithOne("Invoice")
                         .HasForeignKey("Opulenza.Domain.Entities.Invoices.Invoice", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -871,11 +895,13 @@ namespace Opulenza.Infrastructure.Migrations
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Payments.Payment", b =>
                 {
-                    b.HasOne("Opulenza.Domain.Entities.Orders.Order", null)
-                        .WithMany()
-                        .HasForeignKey("OrderId")
+                    b.HasOne("Opulenza.Domain.Entities.Orders.Order", "Order")
+                        .WithOne("Payment")
+                        .HasForeignKey("Opulenza.Domain.Entities.Payments.Payment", "OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Products.ProductMetadata", b =>
@@ -1004,7 +1030,11 @@ namespace Opulenza.Infrastructure.Migrations
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Orders.Order", b =>
                 {
+                    b.Navigation("Invoice");
+
                     b.Navigation("Items");
+
+                    b.Navigation("Payment");
                 });
 
             modelBuilder.Entity("Opulenza.Domain.Entities.Products.Product", b =>

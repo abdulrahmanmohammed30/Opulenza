@@ -541,7 +541,6 @@ namespace Opulenza.Infrastructure.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<string>("PaymentServiceId")
-                        .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 

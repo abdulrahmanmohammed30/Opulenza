@@ -42,6 +42,7 @@ public static class DependencyInjection
                         var seeder = configuration.GetSection("Seeder").Get<Seeder>();
                         context.Set<Product>().AddRange(seeder.Products);
                         context.Set<Category>().AddRange(seeder.Categories);
+                        context.Set<ApplicationUser>().AddRange(seeder.Users);
 
                         context.SaveChanges();
                     }

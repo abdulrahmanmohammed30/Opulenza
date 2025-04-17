@@ -1,5 +1,4 @@
 using Opulenza.Api;
-using Opulenza.Api.Middlewares;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,8 +17,8 @@ var app = builder.Build();
 // {
 //     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 //     var seeder = builder.Configuration.GetSection("Seeder").Get<Seeder>();
-//     // context.Set<Product>().AddRange(seeder.Products);
-//     //context.Set<Category>().AddRange(seeder.Categories);
+//     context.Set<Product>().AddRange(seeder.Products);
+//     context.Set<Category>().AddRange(seeder.Categories);
 //     context.Set<ApplicationUser>().AddRange(seeder.Users);
 //     context.SaveChanges();
 //

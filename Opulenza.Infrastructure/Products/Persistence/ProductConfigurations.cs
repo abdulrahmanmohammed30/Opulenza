@@ -68,6 +68,6 @@ public class ProductConfigurations: IEntityTypeConfiguration<Product>
 
         builder.Property(p => p.PaymentServiceId)
             .HasMaxLength(60)
-            .IsRequired();
+            .IsRequired(false);
     }
 }

@@ -12,8 +12,8 @@ using Opulenza.Infrastructure.Common.Persistence;
 namespace Opulenza.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250416101034_dasdasdasasdasd")]
-    partial class dasdasdasasdasd
+    [Migration("20250417205523_usp_GetCategoryRelationship")]
+    partial class usp_GetCategoryRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -214,6 +214,16 @@ namespace Opulenza.Infrastructure.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("BlockedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("BlockedReason")
+                        .HasMaxLength(600)
+                        .HasColumnType("nvarchar(600)");
+
+                    b.Property<DateTime?>("BlockedUntil")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -534,7 +544,6 @@ namespace Opulenza.Infrastructure.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<string>("PaymentServiceId")
-                        .IsRequired()
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 

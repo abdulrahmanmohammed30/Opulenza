@@ -10,13 +10,16 @@ namespace Opulenza.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateIndex(
-                name: "IX_Categories_Name",
-                table: "Categories",
-                column: "Name",
-                unique: true,
-                filter: "[Name] IS NOT NULL");
-
+            migrationBuilder.AlterColumn<string>(
+                name: "PaymentServiceId",
+                table: "Products",
+                type: "nvarchar(60)",
+                maxLength: 60,
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(60)",
+                oldMaxLength: 60);
+            
             migrationBuilder.Sql(@"
                                 CREATE PROC dbo.usp_HasCircularDependency
                                     @parentCategoryId INT,
@@ -39,18 +42,27 @@ namespace Opulenza.Infrastructure.Migrations
                                     WHERE Id = @categoryId;
                                 END
                               ");
+
         }
-        
-        
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_Categories_Name",
-                table: "Categories");
+            migrationBuilder.AlterColumn<string>(
+                name: "PaymentServiceId",
+                table: "Products",
+                type: "nvarchar(60)",
+                maxLength: 60,
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(60)",
+                oldMaxLength: 60,
+                oldNullable: true);
+            
             
             migrationBuilder.Sql("DROP PROCEDURE IF EXISTS dbo.usp_HasCircularDependency");
+
         }
     }
 }
