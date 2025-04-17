@@ -1,6 +1,6 @@
 **Opulenza API**
 
-An advanced API tailored for an electronic devices store—think laptops, computers, RAM, hard drives, and more. Built on clean architecture principles, this system seamlessly integrates modern functionalities to provide a secure and dynamic shopping experience.
+An API tailored for an electronic devices store—think laptops, computers, RAM, hard drives, and more. Built on clean architecture principles, this system seamlessly integrates modern functionalities to provide a secure and dynamic shopping experience.
 
 **Key Features:**
 
