@@ -32,8 +32,7 @@ A robust e-commerce API for an online electronics store specializing in laptops 
 
 Every endpoint—from `/api/auth/*` actions and cart management to product ratings and wishlist functionalities—has been meticulously crafted to offer a state-of-the-art backend solution.
 
-![1](https://github.com/user-attachments/assets/86a37c95-0e2b-4e83-bafc-1f8f596060be)
-![2](https://github.com/user-attachments/assets/8a41f60c-8c2c-4e40-b76a-6645bbe15d05)
-![3](https://github.com/user-attachments/assets/c027c0d5-f5d0-47fb-804d-690cb6340efb)
+![image](https://github.com/user-attachments/assets/1cecab01-bbfe-49e4-92d9-f82f332e916e)
+
 
 
