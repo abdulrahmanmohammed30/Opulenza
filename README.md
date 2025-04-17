@@ -1,6 +1,6 @@
 **Opulenza API**
 
-An API tailored for an electronic devices store—think laptops, computers, RAM, hard drives, and more. Built on clean architecture principles, this system seamlessly integrates modern functionalities to provide a secure and dynamic shopping experience.
+A robust e-commerce API for an online electronics store specializing in laptops and computers, built with ASP.NET Core and Clean Architecture. This system seamlessly integrates modern functionalities to provide a secure and dynamic shopping experience.
 
 **Key Features:**
 
