@@ -1,12 +1,28 @@
+using Microsoft.AspNetCore.Mvc;
 using Opulenza.Api;
+using Opulenza.Api.Endpoints.Internal;
+using Opulenza.Api.Helpers;
 using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions()
+{
+    Args = args,
+    ApplicationName = "Opulenza.Api",
+    EnvironmentName = Environments.Development,
+    ContentRootPath = Directory.GetCurrentDirectory(),
+    WebRootPath = "./wwwroot"
+});
+
+builder.Services.Configure<JsonOptions>(options =>
+{
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
 
 builder.Configuration.AddJsonFile("seeder.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddPresentation(builder.Configuration);
 
+builder.Services.AddEndpoints<Program>(builder.Configuration);
 // hijacking the default logging
 builder.Host.UseSerilog();
 
@@ -35,8 +51,17 @@ app.UseSwagger();
 
 app.UseSwaggerUI(setupAction =>
 {
-    setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", name: "Opulenza API");
-    setupAction.RoutePrefix = string.Empty;
+    // setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", name: "Opulenza API V1");
+    // setupAction.SwaggerEndpoint("/swagger/v2/swagger.json", "Opulenza API V2");
+    // setupAction.RoutePrefix = string.Empty;
+    // var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    // foreach (var description in provider.ApiVersionDescriptions)
+    // {
+    //     setupAction.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+    // }
+
+    setupAction.SwaggerEndpoint("/swagger/v1/swagger.json", "Opulenza API V1");
+    setupAction.SwaggerEndpoint("/swagger/v2/swagger.json", "Opulenza API V2");
 });
 
 if (app.Environment.IsDevelopment())
@@ -70,4 +95,8 @@ app.UseAuthorization();
 //     await next();
 // });
 app.MapControllers();
+
+ApiVersioningHelpers.SetupApiVersionSet(app);
+app.UseEndpoints<Program>();
+
 app.Run();

@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Opulenza.Application.Features.Common;
 
 namespace Opulenza.Application.Features.Products.Queries.GetProducts;
 
@@ -6,6 +7,8 @@ public class GetProductsQueryValidator: AbstractValidator<GetProductsQuery>
 {
     public GetProductsQueryValidator()
     {
+        Include(new PaginatedQueryValidator());
+        
         RuleFor(p => p.Brand)
             .MaximumLength(80).WithMessage("Brand name must not exceed 80 characters");
         

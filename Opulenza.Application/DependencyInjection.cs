@@ -3,6 +3,7 @@ using System.Text.Json;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -85,6 +86,7 @@ public static class DependencyInjection
 
             options.AddPolicy(AuthConstants.AdminUserPolicyName, policy =>
                 policy.RequireClaim(AuthConstants.AdminUserClaimName, "true"));
+            options.AddPolicy(AuthConstants.ApiKeyPolicyName, p => p.Requirements.Add(new ApiKeyRequirement()));
         });
 
         services.Scan(selector =>
@@ -100,6 +102,8 @@ public static class DependencyInjection
 
         services.Configure<JwtSettings>(configuration.GetSection("JwtSettings"));
 
+        services.AddScoped<IAuthorizationHandler, ApiKeyAuthorizationHandler>();
+        
         services.AddHttpContextAccessor();
 
         return services;

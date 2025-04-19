@@ -1,5 +1,5 @@
-﻿using System.Collections.Immutable;
-using Asp.Versioning;
+﻿using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.OpenApi.Models;
 using Opulenza.Api.Authentication;
 using Opulenza.Api.Services;
@@ -38,7 +38,8 @@ public static class DependencyInjection
             setupAction.ApiVersionReader = new HeaderApiVersionReader("X-Api-Version");
         }).AddMvc().AddApiExplorer(options =>
         {
-            options.GroupNameFormat = "'v'VVV";
+            // options.GroupNameFormat = "'v'VVV";
+            options.GroupNameFormat = "'v'V";
             options.SubstituteApiVersionInUrl = true;
         });
 
@@ -46,11 +47,30 @@ public static class DependencyInjection
 
         services.AddSwaggerGen(setupAction =>
         {
-            setupAction.SwaggerDoc("v1", new OpenApiInfo()
+            // setupAction.SwaggerDoc("v1", new OpenApiInfo()
+            // {
+            //     Version = "v1",
+            //     Title = "Opulenza API V1",
+            // });
+            //
+            // setupAction.SwaggerDoc("v2", new OpenApiInfo()
+            // {
+            //     Version = "v2",
+            //     Title = "Opulenza API V2",
+            // });
+
+            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+            foreach (var description in provider.ApiVersionDescriptions)
             {
-                Version = "v1",
-                Title = "Opulenza API",
-            });
+                setupAction.SwaggerDoc(description.GroupName, new OpenApiInfo
+                {
+                    Title = $"My API {description.ApiVersion}",
+                    Version = description.ApiVersion.ToString(),
+                    Description = $"Swagger documentation for API version: {description.ApiVersion}"
+                });
+            }
+            
 
             setupAction.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
@@ -60,7 +80,7 @@ public static class DependencyInjection
                 Type = SecuritySchemeType.Http,
                 Scheme = "bearer"
             });
-            
+
             // Apply the security scheme globally
             setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
             {

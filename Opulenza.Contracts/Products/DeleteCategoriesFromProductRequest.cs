@@ -1,4 +1,6 @@
-﻿namespace Opulenza.Contracts.Products;
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Opulenza.Contracts.Products;
 
 public class DeleteCategoriesFromProductRequest
 {

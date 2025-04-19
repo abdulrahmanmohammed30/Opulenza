@@ -2,7 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Opulenza.Api.Authentication;
 using Opulenza.Api.Mapping;
 using Opulenza.Application.Authentication;
 using Opulenza.Application.Features.Users.Commands.BlockUser;
@@ -76,8 +75,9 @@ public class UserController(ISender mediator) : CustomController
         return result.Match(value => Ok(value.MapToGetUserQuery()), Problem);
     }
 
-    //[Authorize(AuthConstants.AdminUserPolicyName)]
-    [ApiKeyAuthFilterFactory]
+    [Authorize(AuthConstants.AdminUserPolicyName)]
+    //[ApiKeyAuthFilterFactory]
+    //[Authorize(AuthConstants.ApiKeyPolicyName)]
     [HttpGet]
     [ProducesResponseType(typeof(GetUsersResponse), StatusCodes.Status200OK)]
     [Route(ApiEndpoints.Users.GetUsers)]
